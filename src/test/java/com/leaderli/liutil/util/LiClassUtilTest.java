@@ -3,8 +3,6 @@ package com.leaderli.liutil.util;
 import com.leaderli.liutil.event.LiEvent;
 import org.junit.Test;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.function.Consumer;
 
 public class LiClassUtilTest {
@@ -16,6 +14,7 @@ public class LiClassUtilTest {
         assert String.class == LiClassUtil.unWrapper(String.class);
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public void testGetDirectGenericSupperClassActualType() {
 
@@ -23,14 +22,14 @@ public class LiClassUtilTest {
         };
 
 
-        Class actualType = LiClassUtil.getDirectGenericSupperClassActualType(event.getClass());
+        Class<?> actualType = LiClassUtil.getDirectSingleGenericSupperClassActualType(event.getClass());
 
         assert actualType == String.class;
 
-        //noinspection unchecked
+        // noinspection unchecked
         event = new LiEvent("123") {
         };
-        actualType = LiClassUtil.getDirectGenericSupperClassActualType(event.getClass());
+        actualType = LiClassUtil.getDirectSingleGenericSupperClassActualType(event.getClass());
         assert actualType == Object.class;
 
     }
@@ -47,7 +46,7 @@ public class LiClassUtilTest {
             }
         };
 
-        assert String.class ==  LiClassUtil.getDirectGenericInterfacesActualType(consumer.getClass(), Consumer.class);
+        assert String.class ==  LiClassUtil.getDirectSpecificSingleGenericInterfacesActualType(consumer.getClass(), Consumer.class);
 
     }
 }

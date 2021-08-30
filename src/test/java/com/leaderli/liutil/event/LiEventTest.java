@@ -14,8 +14,7 @@ public class LiEventTest {
     @Test
     public void test(){
 
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("source must not be null");
+        thrown.expect(IllegalArgumentException.class);
         new LiEvent<>(null);
 
     }
