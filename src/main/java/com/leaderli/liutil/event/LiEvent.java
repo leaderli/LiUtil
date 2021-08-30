@@ -1,21 +1,17 @@
 package com.leaderli.liutil.event;
 
 
-import java.util.Objects;
+import java.util.EventObject;
 
-public class LiEvent<T> {
-
-    protected transient  T source;
+public class LiEvent<T> extends EventObject {
 
 
     public LiEvent(T source) {
-
-        Objects.requireNonNull(source,"source must not be null");
-
-        this.source = source;
+        super(source);
     }
 
     public T getSource() {
-        return source;
+        //noinspection unchecked
+        return (T) source;
     }
 }
