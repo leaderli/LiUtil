@@ -1,6 +1,7 @@
 package com.leaderli.liutil.event;
 
 import java.util.EventObject;
+import java.util.List;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class LiEventStore {
@@ -11,6 +12,13 @@ public class LiEventStore {
     public void registerListener(ILiEventListener listener) {
         //noinspection unchecked
         liEventMap.put(listener.listenType(), listener);
+    }
+
+    public void unRegisterListener(ILiEventListener listener) {
+        List list = liEventMap.get(listener.listenType());
+        if (list != null) {
+            list.remove(listener);
+        }
     }
 
     public <T extends EventObject> void push(T liEvent) {
