@@ -10,8 +10,8 @@ public class LiEvent<T> extends EventObject {
         super(source);
     }
 
+    @SuppressWarnings("unchecked")
     public T getSource() {
-        //noinspection unchecked
         return (T) source;
     }
 }

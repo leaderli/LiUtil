@@ -1,6 +1,8 @@
 package com.leaderli.liutil.event;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class LiEventStoreTest {
 
@@ -18,7 +20,7 @@ public class LiEventStoreTest {
 
         @Override
         public void listen(TestLiEvent event) {
-            System.out.println("listen:" + event.getSource());
+            assert event.getSource().equals("123");
 
         }
 
@@ -34,7 +36,7 @@ public class LiEventStoreTest {
 
         @Override
         public void listen(TestLiEvent event) {
-            System.out.println("listen2:" + event.getSource());
+            assert event.getSource().equals("123");
 
         }
 
@@ -49,7 +51,7 @@ public class LiEventStoreTest {
         @Override
         public void listen(String event) {
 
-            System.out.println("->" + event);
+            assert event.equals("123");
         }
 
         @Override
@@ -57,6 +59,10 @@ public class LiEventStoreTest {
             return String.class;
         }
     }
+
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
 
     @Test
@@ -71,6 +77,8 @@ public class LiEventStoreTest {
         eventStore.registerListener(new TestLiEventListener2());
 
         eventStore.push(new TestLiEvent("123"));
+        thrown.expect(NullPointerException.class);
+        eventStore.push(null);
 
     }
 
