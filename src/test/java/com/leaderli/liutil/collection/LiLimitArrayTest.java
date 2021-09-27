@@ -21,19 +21,29 @@ public class LiLimitArrayTest {
         LiLimitArray<Integer> limitArray = new LiLimitArray<>(10);
 
         limitArray.add(1);
-        System.out.println(limitArray);
         limitArray.add(2);
-        System.out.println(limitArray);
+
+        assert limitArray.contains(1);
+        assert limitArray.contains(2);
+
         limitArray.remove(2);
-        System.out.println(limitArray);
+
+        assert limitArray.contains(1);
+        assert !limitArray.contains(2);
+
         for (int i = 0; i < 10; i++) {
             limitArray.add(i);
-            System.out.println(limitArray);
         }
+
+
+        for (int i = 0; i < 10; i++) {
+            limitArray.contains(i);
+        }
+
         limitArray.remove(4);
-        System.out.println(limitArray);
         limitArray.remove(3);
-        System.out.println(limitArray);
+        assert !limitArray.contains(3);
+        assert !limitArray.contains(4);
 
     }
 

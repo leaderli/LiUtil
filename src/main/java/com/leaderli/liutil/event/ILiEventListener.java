@@ -1,8 +1,9 @@
 package com.leaderli.liutil.event;
 
-public interface ILiEventListener<T> {
+import com.leaderli.liutil.type.GenericType;
+
+public interface ILiEventListener<T> extends GenericType<T> {
 
     void listen(T event);
 
-    Class<T> listenType();
 }

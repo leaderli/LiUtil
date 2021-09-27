@@ -12,6 +12,7 @@ public class LiLimitArray<T> {
         data = new Object[size];
     }
 
+
     public void add(T t) {
         if (t == null || contains(t)) {
             return;
@@ -47,7 +48,7 @@ public class LiLimitArray<T> {
             return false;
         }
         for (int i = 0; i < size; i++) {
-            if (t.equals(data[size])) {
+            if (t.equals(data[i])) {
                 return true;
             }
         }

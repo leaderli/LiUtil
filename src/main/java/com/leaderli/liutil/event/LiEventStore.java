@@ -11,11 +11,11 @@ public class LiEventStore {
 
     public void registerListener(ILiEventListener listener) {
         //noinspection unchecked
-        liEventMap.put(listener.listenType(), listener);
+        liEventMap.put(listener.genericType(), listener);
     }
 
     public void unRegisterListener(ILiEventListener listener) {
-        List list = liEventMap.get(listener.listenType());
+        List list = liEventMap.get(listener.genericType());
         if (list != null) {
             list.remove(listener);
         }

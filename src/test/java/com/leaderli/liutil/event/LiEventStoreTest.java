@@ -23,7 +23,7 @@ public class LiEventStoreTest {
         }
 
         @Override
-        public Class<TestLiEvent> listenType() {
+        public Class<TestLiEvent> genericType() {
             return TestLiEvent.class;
         }
     }
@@ -39,7 +39,7 @@ public class LiEventStoreTest {
         }
 
         @Override
-        public Class<TestLiEvent> listenType() {
+        public Class<TestLiEvent> genericType() {
             return TestLiEvent.class;
         }
     }
@@ -53,7 +53,7 @@ public class LiEventStoreTest {
         }
 
         @Override
-        public Class<String> listenType() {
+        public Class<String> genericType() {
             return String.class;
         }
     }
