@@ -9,20 +9,52 @@ import org.junit.Test;
 public class LiDomUtilTest {
 
 
+    private static class Visitor {
+        void visit(DOMElement dom) {
+
+        }
+
+        void visit(String text) {
+
+        }
+    }
+
+    private static class MyDom {
+
+        private DOMElement dom;
+
+        public MyDom(DOMElement dom) {
+            this.dom = dom;
+        }
+
+        void accept(Visitor visitor) {
+
+            visitor.visit(dom);
+            LiDomUtil.getChildren(dom).forEach(child->{
+                new MyDom(child).accept(visitor);
+            });
+            visitor.visit(dom.getTextTrim());
+        }
+    }
+
     @Test
     public void test() throws DocumentException {
-        DOMDocument dom = LiDomUtil.getDOMDocumentByPath("/test1.xml");
-        LiDomUtil.prettyPrint(dom);
-        LiDomUtil.prettyPrint(dom);
-        for (DOMElement child : LiDomUtil.getChildren(dom)) {
-            LiDomUtil.prettyPrint(child);
-        }
-        System.out.println("-------------------->");
+        DOMElement dom = LiDomUtil.getDOMRootByPath("/test1.xml");
 
-        DOMElement root = LiDomUtil.getDOMRootByPath("/test1.xml");
-        for (DOMElement child : LiDomUtil.getChildren(root)) {
-            LiDomUtil.prettyPrint(child);
-        }
+        MyDom myDom = new MyDom(dom);
+        myDom.accept(new Visitor(){
+            @Override
+            void visit(DOMElement dom) {
+                System.out.println(dom.asXML());
+                System.out.println("-----------------------------------");
+            }
+
+            @Override
+            void visit(String text) {
+                System.out.println(text);
+                System.out.println("-----------------------------------text");
+            }
+        });
 
     }
 

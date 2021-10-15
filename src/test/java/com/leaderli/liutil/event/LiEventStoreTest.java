@@ -81,6 +81,35 @@ public class LiEventStoreTest {
         eventStore.push(null);
 
     }
+    @Test
+    public void test1() {
+
+        LiEventStore liEventStore = new LiEventStore();
+
+        ILiEventListener listener = new ILiEventListener<TestLiEvent>() {
+
+
+            @Override
+            public Class<TestLiEvent> genericType() {
+                return TestLiEvent.class;
+            }
+
+            @Override
+            public void listen(TestLiEvent event) {
+                System.out.println(event.getSource());
+            }
+
+            @Override
+            public boolean unRegisterListenerAfterListen() {
+                return true;
+            }
+        };
+        liEventStore.registerListener(listener);
+
+        liEventStore.push(new TestLiEvent("123"));
+        liEventStore.push(new TestLiEvent("123"));
+
+    }
 
 
 }

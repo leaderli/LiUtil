@@ -23,7 +23,9 @@ public class LiEventStore {
 
     public <T extends EventObject> void push(T liEvent) {
         Class<T> cls = (Class<T>) liEvent.getClass();
-        liEventMap.get(cls).forEach(listener -> listener.listen(liEvent));
+        List<ILiEventListener<T>> listeners = liEventMap.get(cls);
+        listeners.forEach(listener -> listener.listen(liEvent));
+        listeners.removeIf(ILiEventListener::unRegisterListenerAfterListen);
     }
 
 }
