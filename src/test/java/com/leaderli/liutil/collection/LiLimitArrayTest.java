@@ -40,11 +40,27 @@ public class LiLimitArrayTest {
             limitArray.contains(i);
         }
 
+        limitArray.add(4);
         limitArray.remove(4);
         limitArray.remove(3);
         assert !limitArray.contains(3);
         assert !limitArray.contains(4);
 
     }
+
+    private static class Limit{
+       private int index;
+
+       private int[] arr = new int[100];
+    }
+    @Test
+    public void test2() {
+
+
+
+
+
+    }
+
 
 }
