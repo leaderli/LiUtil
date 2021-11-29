@@ -8,46 +8,42 @@ public class LiSinkTest {
     @Test
     public void test() {
 
-        LiSink<String,Boolean> begin= new LiSink<String,Boolean>(null){
-            @Override
-            public Boolean apply(String o) {
+        LiSink<String, Boolean> prev = null;
+        for (int i = 0; i < 1000; i++) {
 
-                System.out.println("1:"+o);
+            int finalI = i;
+            LiSink<String, Boolean> next = new LiSink<String, Boolean>(prev) {
+                @Override
+                public Boolean apply(String o,Boolean last) {
 
-                return  next.apply(o);
-            }
+                    System.out.println(finalI +":" + o+" last:"+last);
 
 
-        };
-        LiSink<String,Boolean> one = new LiSink<String,Boolean>(begin){
-            @Override
-            public Boolean apply(String o) {
+                    if(this.next!=null){
 
-                System.out.println("2:"+o);
+                        return this.next.apply(o,last);
+                    }
+                    return false;
+                }
+            };
+            prev =next;
+        }
 
-                return next.apply(o);
-            }
-        };
-        LiSink<String,Boolean> two= new LiSink<String,Boolean>(one){
-            @Override
-            public Boolean apply(String o) {
 
-                System.out.println("3:"+o);
+        boolean hello = prev.request("hello");
+        System.out.println(hello);
 
-                return next.apply(o);
-            }
-        };
-        LiSink<String,Boolean> end= new LiSink<String,Boolean>(two){
-            @Override
-            public Boolean apply(String o) {
 
-                System.out.println("4:"+o);
 
-                return  true;
-            }
-        };
 
-        System.out.println(end.request("hello"));
+    }
+
+    @Test
+    public void test11() throws Throwable{
+        Boolean a = null;
+
+        System.out.println(!a);
+        System.out.println(a);
 
     }
 
