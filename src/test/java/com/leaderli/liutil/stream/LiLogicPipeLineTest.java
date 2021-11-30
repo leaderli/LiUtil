@@ -131,13 +131,8 @@ public class LiLogicPipeLineTest {
 
     @Test
     public void test2() {
-        MyLinterCombineOperation operation;
-//        operation.
         assert !MyLiLogicPipeLine.instance().test(str -> true).and().test(str -> false).apply("1");
         assert !MyLiLogicPipeLine.instance().len(1).and().len(2).apply("1");
         assert MyLiLogicPipeLine.instance().len(1).or().len(2).apply("1");
-
-//        logic
-
     }
 }
