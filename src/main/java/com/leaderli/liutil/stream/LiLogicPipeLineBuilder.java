@@ -1,19 +1,20 @@
 package com.leaderli.liutil.stream;
 
-public class LiLogicPipeLineBuilder<T> {
+import java.util.function.Function;
 
-   protected LiSink<T, Boolean> sink;
+public class LiLogicPipeLineBuilder<T> implements Function<T,Boolean> {
 
-//    public LiLogicPipeLineBuilder() {
-//        if(sink==null){
-//            this.sink = new LiSink<T, Boolean>(null) {
-//                @Override
-//                public Boolean apply(T t, Boolean last) {
-//                    return this.next.apply(t,null);
-//                }
-//
-//            };
-//        }
-//        this.sink = sink;
-//    }
+   protected final LiLogicPipeLine<T> liLogicPipeLine;
+
+
+
+    public LiLogicPipeLineBuilder(LiLogicPipeLine<T> liLogicPipeLine) {
+        this.liLogicPipeLine = liLogicPipeLine;
+    }
+
+
+    @Override
+    public Boolean apply(T t) {
+        return this.liLogicPipeLine.apply(t);
+    }
 }
