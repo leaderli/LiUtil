@@ -85,7 +85,7 @@ public class LiLogicPipeLineTest {
 
         }
 
-        public static <T> MyLiLogicPipeLine instance() {
+        public static MyLiLogicPipeLine instance() {
 
             return new MyLiLogicPipeLine();
         }
@@ -130,14 +130,13 @@ public class LiLogicPipeLineTest {
 
 
     @Test
-    public void test2() throws Throwable {
+    public void test2() {
         MyLinterCombineOperation operation;
 //        operation.
-        MyLinterCombineOperation logic = new MyLiLogicPipeLine();
-        System.out.println(new MyLiLogicPipeLine().test(str -> true).and().test(str -> false).apply("1"));
+        assert !MyLiLogicPipeLine.instance().test(str -> true).and().test(str -> false).apply("1");
+        assert !MyLiLogicPipeLine.instance().len(1).and().len(2).apply("1");
+        assert MyLiLogicPipeLine.instance().len(1).or().len(2).apply("1");
 
-        System.out.println(new MyLiLogicPipeLine().len(1).or().len(2).apply("1"));
-        System.out.println(new MyLiLogicPipeLine().len(1).and().len(2).apply("1"));
 //        logic
 
     }
