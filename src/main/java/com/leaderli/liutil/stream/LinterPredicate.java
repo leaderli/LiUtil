@@ -1,7 +1,8 @@
 package com.leaderli.liutil.stream;
 
-public interface LinterPredicate<T> {
-    LinterCombineOperation<T> and();
-    LinterCombineOperation or();
+import java.util.function.Function;
 
+public interface LinterPredicate<T> extends Function<T,Boolean> {
+    LinterCombineOperation<T> and();
+    LinterCombineOperation<T> or();
 }

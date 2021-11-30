@@ -1,73 +1,88 @@
 package com.leaderli.liutil.stream;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class LiLogicPipeLine<T> implements Function<T,Boolean> {
+public class LiLogicPipeLine<T> implements LinterLogicPipeLine<T>{
 
 
-    private LiSink<T,Boolean> liSink ;
-//    = new LiSink<T, Boolean>(null) {
-//        @Override
-//        public Boolean apply(T t, Boolean last) {
-//
-//            if(this.next!=null){
-//                return next.apply(t,true);
-//            }
-//            return true;
-//        }
-//    };
+    private static class Head<T> extends LiSink<T, Boolean> {
 
-    private LiLogicPipeLine(){
-        add((sink,t,last)->{
-            if(sink.next!=null){
-                return sink.next.apply(t,true);
-            }
-            return true;
-        });
+        public Head() {
+            super(null);
+        }
+
+        @Override
+        public Boolean apply(T request, Boolean last) {
+            return next(request, LiPredicateSink.NO_NOT_OPERATION);
+        }
+    }
+
+    protected LiSink<T, Boolean> liSink = new Head<>();
+
+    private LiLogicPipeLine() {
+
     }
 
 
-//    public static
-public static <T>LinterCombineOperation<T> instance() {
+    public static <T> LinterCombineOperation<T> instance() {
 
-    LiLogicPipeLine<T> logic = new LiLogicPipeLine<>();
-    return new LiLogicPipeLineCombineOperation<>(logic);
-
-}
-
-
-
-
-    public  final void add(LiFunctionWithLiSink<T,Boolean> proxy){
-
-
-        this.liSink = new LiSink<T,Boolean>(this.liSink){
-
-            @Override
-            public Boolean apply(T t, Boolean last) {
-                return proxy.apply(this,t,last);
-            }
-        };
-
+        return new LiLogicPipeLine<>();
     }
-
 
     @Override
     public Boolean apply(T t) {
         return liSink.request(t);
     }
 
+    @Override
+    public LinterOperation<T> not() {
+        this.liSink = new LiSink<T, Boolean>(this.liSink) {
+            @Override
+            public Boolean apply(T request, Boolean last) {
+                return next(request, LiPredicateSink.IS_NOT_OPERATION);
+            }
+        };
+        return this;
+    }
 
-//
-//    @Override
-//    public LinterPredicate<T> test(Predicate<T> predicate) {
-//        return  new LiLogicPipeLineCombineOperation<>(this).test(predicate);
-//    }
-//
-//    @Override
-//    public LinterOperation <T> not() {
-//        return  new LiLogicPipeLineCombineOperation<>(this).not();
-//    }
+    @Override
+    public LinterPredicate<T> test(Predicate<T> predicate) {
+
+        this.liSink = new LiPredicateSink<>(this.liSink, predicate);
+
+        return this;
+    }
+
+
+    @Override
+    public LinterCombineOperation<T> and() {
+
+        this.liSink = new LiSink<T, Boolean>(this.liSink) {
+            @Override
+            public Boolean apply(T request, Boolean lastPredicateResult) {
+                //短路
+                if (lastPredicateResult) {
+                    return next(request, LiPredicateSink.NO_NOT_OPERATION);
+                }
+                return false;
+            }
+        };
+        return this;
+    }
+
+    @Override
+    public LinterCombineOperation<T> or() {
+        this.liSink = new LiSink<T, Boolean>(this.liSink) {
+            @Override
+            public Boolean apply(T request, Boolean lastPredicateResult) {
+                //短路
+                if (lastPredicateResult) {
+                    return true;
+                }
+                return next(request, LiPredicateSink.NO_NOT_OPERATION);
+            }
+        };
+        return this;
+    }
 
 }

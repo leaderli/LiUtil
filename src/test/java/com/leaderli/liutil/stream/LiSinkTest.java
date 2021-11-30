@@ -14,14 +14,14 @@ public class LiSinkTest {
             int finalI = i;
             LiSink<String, Boolean> next = new LiSink<String, Boolean>(prev) {
                 @Override
-                public Boolean apply(String o,Boolean last) {
+                public Boolean apply(String request, Boolean last) {
 
-                    System.out.println(finalI +":" + o+" last:"+last);
+                    System.out.println(finalI +":" + request +" last:"+last);
 
 
                     if(this.next!=null){
 
-                        return this.next.apply(o,last);
+                        return this.next.apply(request,last);
                     }
                     return false;
                 }

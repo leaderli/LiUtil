@@ -2,5 +2,5 @@ package com.leaderli.liutil.stream;
 
 public interface LiFunction<T, R> {
 
-    R apply(T t, R last);
+    R apply(T request, R last);
 }
