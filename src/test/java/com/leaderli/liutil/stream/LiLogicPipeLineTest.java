@@ -10,74 +10,74 @@ public class LiLogicPipeLineTest {
     public void test() {
 
 
-        assert !LiLogicPipeLine.instance().test(str -> true).and().test(str -> false).apply("");
+        assert !LiLogicPipeLine.instance().begin().test(str -> true).and().test(str -> false).apply("");
 
 
-        assert !LiLogicPipeLine.instance().test(str -> false).and().test(str -> false).apply("hello");
+        assert !LiLogicPipeLine.instance().begin().test(str -> false).and().test(str -> false).apply("hello");
 
 
-        assert !LiLogicPipeLine.instance().test(str -> false).and().test(str -> true).apply("hello");
+        assert !LiLogicPipeLine.instance().begin().test(str -> false).and().test(str -> true).apply("hello");
 
 
-        assert LiLogicPipeLine.instance().test(str -> true).and().test(str -> true).apply("hello");
+        assert LiLogicPipeLine.instance().begin().test(str -> true).and().test(str -> true).apply("hello");
 
 
-        assert LiLogicPipeLine.instance().test(str -> true).or().test(str -> false).apply("hello");
+        assert LiLogicPipeLine.instance().begin().test(str -> true).or().test(str -> false).apply("hello");
 
 
-        assert !LiLogicPipeLine.instance().test(str -> false).or().test(str -> false).apply("hello");
+        assert !LiLogicPipeLine.instance().begin().test(str -> false).or().test(str -> false).apply("hello");
 
 
-        assert LiLogicPipeLine.instance().test(str -> false).or().test(str -> true).apply("hello");
+        assert LiLogicPipeLine.instance().begin().test(str -> false).or().test(str -> true).apply("hello");
 
 
-        assert LiLogicPipeLine.instance().test(str -> true).or().test(str -> true).apply("hello");
+        assert LiLogicPipeLine.instance().begin().test(str -> true).or().test(str -> true).apply("hello");
 
 
-        assert LiLogicPipeLine.instance().test(str -> true).apply("hello");
+        assert LiLogicPipeLine.instance().begin().test(str -> true).apply("hello");
 
 
-        assert !LiLogicPipeLine.instance().test(str -> false).apply("hello");
+        assert !LiLogicPipeLine.instance().begin().test(str -> false).apply("hello");
 
 
-        assert !LiLogicPipeLine.instance().not().test(str -> true).apply("hello");
+        assert !LiLogicPipeLine.instance().begin().not().test(str -> true).apply("hello");
 
 
-        assert LiLogicPipeLine.instance().not().test(str -> false).apply("hello");
+        assert LiLogicPipeLine.instance().begin().not().test(str -> false).apply("hello");
 
 
-        LiLogicPipeLine.instance().test(str -> false);
-        assert LiLogicPipeLine.instance().not().test(str -> false).and().not().test(str -> false).apply("hello");
-
-    }
-
-
-    private interface MyLinterPredicate extends LinterPredicate<String> {
-        MyLinterCombineOperation and();
-
-        MyLinterCombineOperation or();
+        LiLogicPipeLine.instance().begin().test(str -> false);
+        assert LiLogicPipeLine.instance().begin().not().test(str -> false).and().not().test(str -> false).apply("hello");
 
     }
 
-    private interface MyLinterOperation extends LinterOperation<String> {
-        MyLinterPredicate len(int size);
 
-        MyLinterPredicate test(Predicate<String> predicate);
-    }
+    private interface MyLinterPredicateSink extends LinterPredicateSink<String> {
+        MyLinterCombineOperationSink and();
 
-    private interface MyLinterNotOperation extends LinterNotOperation<String> {
-        MyLinterOperation not();
-    }
-
-    private interface MyLinterCombineOperation extends MyLinterOperation, MyLinterNotOperation, LinterCombineOperation<String> {
-    }
-
-
-    private interface MyLinterLogicPipeLine extends MyLinterCombineOperation, MyLinterPredicate {
+        MyLinterCombineOperationSink or();
 
     }
 
-    private static class MyLiLogicPipeLine implements MyLinterLogicPipeLine {
+    private interface MyLinterOperationSink extends LinterOperationSink<String> {
+        MyLinterPredicateSink len(int size);
+
+        MyLinterPredicateSink test(Predicate<String> predicate);
+    }
+
+    private interface MyLinterNotOperationSink extends LinterNotOperationSink<String> {
+        MyLinterOperationSink not();
+    }
+
+    private interface MyLinterCombineOperationSink extends MyLinterOperationSink, MyLinterNotOperationSink, LinterCombineOperationSink<String> {
+    }
+
+
+    private interface MyLinterLogicPipeLineSink extends MyLinterCombineOperationSink, MyLinterPredicateSink {
+
+    }
+
+    private static class MyLiLogicPipeLine implements MyLinterLogicPipeLineSink {
 
         private final LiLogicPipeLine<String> proxy = (LiLogicPipeLine<String>) LiLogicPipeLine.<String>instance();
 
@@ -87,29 +87,31 @@ public class LiLogicPipeLineTest {
 
         public static MyLiLogicPipeLine instance() {
 
-            return new MyLiLogicPipeLine();
+            MyLiLogicPipeLine myLiLogicPipeLine = new MyLiLogicPipeLine();
+            myLiLogicPipeLine.proxy.begin();
+            return myLiLogicPipeLine;
         }
 
         @Override
-        public MyLinterCombineOperation and() {
+        public MyLinterCombineOperationSink and() {
             proxy.and();
             return this;
         }
 
         @Override
-        public MyLinterCombineOperation or() {
+        public MyLinterCombineOperationSink or() {
             proxy.or();
             return this;
         }
 
         @Override
-        public MyLinterOperation not() {
+        public MyLinterOperationSink not() {
             proxy.not();
             return this;
         }
 
         @Override
-        public MyLinterPredicate test(Predicate<String> predicate) {
+        public MyLinterPredicateSink test(Predicate<String> predicate) {
             proxy.test(predicate);
             return this;
         }
@@ -120,7 +122,7 @@ public class LiLogicPipeLineTest {
         }
 
         @Override
-        public MyLinterPredicate len(int size) {
+        public MyLinterPredicateSink len(int size) {
             test(str -> size == str.length());
             return this;
         }

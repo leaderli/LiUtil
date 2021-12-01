@@ -2,8 +2,14 @@ package com.leaderli.liutil.stream;
 
 import java.util.function.Predicate;
 
-public class LiLogicPipeLine<T> implements LinterLogicPipeLine<T>{
+public class LiLogicPipeLine<T> implements LinterLogicPipeLineSink<T> {
 
+
+    @Override
+    public LinterCombineOperationSink<T> begin() {
+        this.liSink = new Head<>();
+        return this;
+    }
 
     private static class Head<T> extends LiSink<T, Boolean> {
 
@@ -17,14 +23,14 @@ public class LiLogicPipeLine<T> implements LinterLogicPipeLine<T>{
         }
     }
 
-    protected LiSink<T, Boolean> liSink = new Head<>();
+     private  LiSink<T, Boolean> liSink ;
 
     private LiLogicPipeLine() {
 
     }
 
 
-    public static <T> LinterCombineOperation<T> instance() {
+    public static <T> LinterBeginSink <T> instance() {
 
         return new LiLogicPipeLine<>();
     }
@@ -35,7 +41,7 @@ public class LiLogicPipeLine<T> implements LinterLogicPipeLine<T>{
     }
 
     @Override
-    public LinterOperation<T> not() {
+    public LinterOperationSink<T> not() {
         this.liSink = new LiSink<T, Boolean>(this.liSink) {
             @Override
             public Boolean apply(T request, Boolean last) {
@@ -46,7 +52,7 @@ public class LiLogicPipeLine<T> implements LinterLogicPipeLine<T>{
     }
 
     @Override
-    public LinterPredicate<T> test(Predicate<T> predicate) {
+    public LinterPredicateSink<T> test(Predicate<T> predicate) {
 
         this.liSink = new LiPredicateSink<>(this.liSink, predicate);
 
@@ -55,7 +61,7 @@ public class LiLogicPipeLine<T> implements LinterLogicPipeLine<T>{
 
 
     @Override
-    public LinterCombineOperation<T> and() {
+    public LinterCombineOperationSink<T> and() {
 
         this.liSink = new LiSink<T, Boolean>(this.liSink) {
             @Override
@@ -71,7 +77,7 @@ public class LiLogicPipeLine<T> implements LinterLogicPipeLine<T>{
     }
 
     @Override
-    public LinterCombineOperation<T> or() {
+    public LinterCombineOperationSink<T> or() {
         this.liSink = new LiSink<T, Boolean>(this.liSink) {
             @Override
             public Boolean apply(T request, Boolean lastPredicateResult) {
