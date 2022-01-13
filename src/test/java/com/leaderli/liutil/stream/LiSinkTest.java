@@ -38,14 +38,6 @@ public class LiSinkTest {
 
     }
 
-    @Test
-    public void test11() throws Throwable{
-        Boolean a = null;
-
-        System.out.println(!a);
-        System.out.println(a);
-
-    }
 
 
 }
