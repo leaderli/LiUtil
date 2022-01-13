@@ -66,4 +66,15 @@ public class LiMono<T> {
         }
         return LiMono.of(or);
     }
+
+    public <R>LiMono<R> cast(Class<R> type){
+
+        if(isPresent()&& type!=null &&type.isAssignableFrom(this.element.getClass())){
+
+            //noinspection unchecked
+            return (LiMono<R>) this;
+        }
+        return LiMono.empty();
+    }
+
 }

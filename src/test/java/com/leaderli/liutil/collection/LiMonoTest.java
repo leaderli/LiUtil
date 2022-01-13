@@ -4,6 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class LiMonoTest {
@@ -56,6 +59,7 @@ public class LiMonoTest {
 
         Data data = new Data();
         thrown.expect(NullPointerException.class);
+        String name = data.getBody().getRequest().getName();
     }
 
     @Test
@@ -99,6 +103,26 @@ public class LiMonoTest {
                 .or("123").get();
 
         assert !name.isPresent() || "123".equals(name.get());
+
+    }
+
+    @Test
+    public void test4() throws Throwable {
+
+        Object obj = new HashMap<>();
+
+        LiMono.of(obj)
+                .cast(Map.class)
+                .then(map -> {
+                    System.out.println(map.size());
+                    System.out.println(map);
+                })
+                .cast(List.class)
+                .then(list -> {
+
+                    System.out.println(list.size());
+                    System.out.println(list);
+                });
 
     }
 }
