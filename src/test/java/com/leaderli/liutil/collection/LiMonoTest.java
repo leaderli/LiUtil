@@ -100,7 +100,7 @@ public class LiMonoTest {
                 .to(Data::getBody).error(() -> System.out.println("error"))
                 .to(Body::getRequest)
                 .to(Request::getName)
-                .or("123").get();
+                .or("123").getOr();
 
         assert !name.isPresent() || "123".equals(name.get());
 
@@ -135,7 +135,7 @@ public class LiMonoTest {
         list.add("2");
         list.add(1);
 
-        List<String> arr = LiMono.of(list).castList(String.class).get().get();
+        List<String> arr = LiMono.of(list).castList(String.class).getOr().get();
 
         assert arr.size() == 2;
 
@@ -146,7 +146,7 @@ public class LiMonoTest {
         map.put(3, 3);
 
 
-        Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).get().get();
+        Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).getOr().get();
 
         assert stringMap.size() == 1;
 

@@ -55,12 +55,12 @@ public class LiMono<T> {
         return element != null;
     }
 
-    public Optional<T> get() {
+    public Optional<T> getOr() {
         return Optional.ofNullable(element);
     }
 
 
-    public T get(T def) {
+    public T getOr(T def) {
         if (isPresent()) {
             return element;
         } else {
@@ -89,7 +89,7 @@ public class LiMono<T> {
 
         LiMono<List<R>> listLiMono = castList(type);
 
-        return listLiMono.get(Collections.emptyList())
+        return listLiMono.getOr(Collections.emptyList())
                 .stream()
                 .map(LiMono::of)
                 .collect(Collectors.toList());
@@ -101,7 +101,7 @@ public class LiMono<T> {
 
         @SuppressWarnings("rawtypes")
         LiMono<List> listMono = cast(List.class);
-        return LiMono.of(LiCastUtil.cast(listMono.get(null), type));
+        return LiMono.of(LiCastUtil.cast(listMono.getOr(null), type));
     }
 
     public <K, V> LiMono<List<Map<K, V>>> castListMap(Class<K> keyType, Class<V> valueType) {
@@ -120,6 +120,6 @@ public class LiMono<T> {
 
         @SuppressWarnings("rawtypes")
         LiMono<Map> listMono = cast(Map.class);
-        return LiMono.of(LiCastUtil.cast(listMono.get(null), keyType, valueType));
+        return LiMono.of(LiCastUtil.cast(listMono.getOr(null), keyType, valueType));
     }
 }
