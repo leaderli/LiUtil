@@ -98,10 +98,6 @@ public class LiMono<T> {
 
     }
 
-    public <R> LiMono<R> cast(Class<R> type) {
-        //noinspection unchecked
-        return (LiMono<R>) filter(monoElement -> LiClassUtil.isAssignableFromOrIsWrapper(type, monoElement.getClass()));
-    }
 
     public <R> List<LiMono<R>> stream(Class<R> type) {
 
@@ -122,6 +118,10 @@ public class LiMono<T> {
                 .collect(Collectors.toList());
     }
 
+    public <R> LiMono<R> cast(Class<R> type) {
+        //noinspection unchecked
+        return (LiMono<R>) filter(monoElement -> LiClassUtil.isAssignableFromOrIsWrapper(type, monoElement.getClass()));
+    }
 
     public <R> LiMono<List<R>> castList(Class<R> type) {
 
