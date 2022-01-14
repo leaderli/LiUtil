@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class LiMono<T> {
 
@@ -90,6 +91,18 @@ public class LiMono<T> {
         @SuppressWarnings("rawtypes")
         LiMono<List> listMono = cast(List.class);
         return LiMono.of(LiCastUtil.cast(listMono.get(null), type));
+    }
+
+    public <K, V> LiMono<List<Map<K, V>>> castListMap(Class<K> keyType, Class<V> valueType) {
+
+        @SuppressWarnings("rawtypes")
+        LiMono<List<Map>> listMapMono = castList(Map.class);
+
+        return listMapMono.to(list -> list.stream()
+                .map(item -> LiCastUtil.cast(item, keyType, valueType))
+                .filter(item -> !item.isEmpty())
+                .collect(Collectors.toList()));
+
     }
 
     public <K, V> LiMono<Map<K, V>> castMap(Class<K> keyType, Class<V> valueType) {
