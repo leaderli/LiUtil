@@ -2,7 +2,6 @@ package com.leaderli.lidomutil.util;
 
 import com.leaderli.liutil.dom.LiDomUtil;
 import org.dom4j.DocumentException;
-import org.dom4j.dom.DOMDocument;
 import org.dom4j.dom.DOMElement;
 import org.junit.Test;
 
@@ -30,9 +29,7 @@ public class LiDomUtilTest {
         void accept(Visitor visitor) {
 
             visitor.visit(dom);
-            LiDomUtil.getChildren(dom).forEach(child->{
-                new MyDom(child).accept(visitor);
-            });
+            LiDomUtil.getChildren(dom).forEach(child-> new MyDom(child).accept(visitor));
             visitor.visit(dom.getTextTrim());
         }
     }
@@ -45,14 +42,10 @@ public class LiDomUtilTest {
         myDom.accept(new Visitor(){
             @Override
             void visit(DOMElement dom) {
-                System.out.println(dom.asXML());
-                System.out.println("-----------------------------------");
             }
 
             @Override
             void visit(String text) {
-                System.out.println(text);
-                System.out.println("-----------------------------------text");
             }
         });
 

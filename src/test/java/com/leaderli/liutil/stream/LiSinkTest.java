@@ -11,12 +11,9 @@ public class LiSinkTest {
         LiSink<String, Boolean> prev = null;
         for (int i = 0; i < 1000; i++) {
 
-            int finalI = i;
-            LiSink<String, Boolean> next = new LiSink<String, Boolean>(prev) {
+            prev = new LiSink<String, Boolean>(prev) {
                 @Override
                 public Boolean apply(String request, Boolean last) {
-
-                    System.out.println(finalI +":" + request +" last:"+last);
 
 
                     if(this.next!=null){
@@ -26,12 +23,12 @@ public class LiSinkTest {
                     return false;
                 }
             };
-            prev =next;
         }
 
 
         boolean hello = prev.request("hello");
-        System.out.println(hello);
+        assert !hello;
+
 
 
 

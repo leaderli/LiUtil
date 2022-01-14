@@ -58,8 +58,10 @@ public class LiMonoTest {
     public void test3() {
         Data data = new Data();
 
-        Optional<String> name = LiMono.of(data)
-                .to(Data::getBody).error(() -> System.out.println("error"))
+        LiMono<Body> mono = LiMono.of(data)
+                .to(Data::getBody);
+        assert mono.notPresent();
+        Optional<String> name = mono
                 .to(Body::getRequest)
                 .to(Request::getName)
                 .or("123").get();
@@ -108,8 +110,6 @@ public class LiMonoTest {
         map.put("1", "1");
         map.put("2", 2);
         map.put(3, 3);
-
-
 
 
         Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).getRaw();

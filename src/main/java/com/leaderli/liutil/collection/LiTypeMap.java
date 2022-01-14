@@ -1,32 +1,32 @@
 package com.leaderli.liutil.collection;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.leaderli.liutil.util.LiClassUtil;
 
+import java.util.HashMap;
+import java.util.Map;
 
-class TypeValue<T> {
-
-
-    public final Class<T> type;
-    public final T value;
-
-    TypeValue(Class<T> type, T value) {
-        this.type = type;
-        this.value = value;
-    }
-}
-
+/**
+ * store value by it's type
+ */
 public class LiTypeMap {
-    private final List<TypeValue<?>> proxy = new ArrayList<>();
+    private final Map<Class<?>, Object> proxy = new HashMap<>();
 
+    /**
+     * @param type  map key, it's a generic type
+     * @param value map value, it's a generic value
+     * @param <T>   key and value generic type
+     */
     public <T> void put(Class<T> type, T value) {
-        proxy.add(new TypeValue<>(type, value));
+        proxy.put(LiClassUtil.primitiveToWrapper(type), value);
     }
 
+    /**
+     * @param type map key, it's a generic type
+     * @param <T>  map value, it's a generic value
+     * @return get value by type, it could be null
+     */
     @SuppressWarnings("unchecked")
-    public <T> Optional<TypeValue<T>> get(Class<T> type) {
-        return proxy.stream().filter(typeValue -> typeValue.type == type).map(typeValue -> (TypeValue<T>) typeValue).findAny();
-
+    public <T> T get(Class<T> type) {
+        return (T) proxy.get(LiClassUtil.primitiveToWrapper(type));
     }
 }

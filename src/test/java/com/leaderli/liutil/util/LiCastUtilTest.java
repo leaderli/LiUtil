@@ -3,6 +3,7 @@ package com.leaderli.liutil.util;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @SuppressWarnings("ConstantConditions")
 public class LiCastUtilTest {
@@ -24,16 +25,16 @@ public class LiCastUtilTest {
         assert LiCastUtil.cast(list, Integer.class).size() == 2;
         assert LiCastUtil.cast(a, int.class) == null;
     }
+
     @Test
     public void test1() {
-
 
 
     }
 
     @Test
     public void primitiveToWrapper() {
-        assert LiClassUtil.primitiveToWrapper(null)==null;
+        assert LiClassUtil.primitiveToWrapper(null) == null;
     }
 
     @Test
@@ -42,5 +43,16 @@ public class LiCastUtilTest {
         assert LiCastUtil.cast(a, Integer.class) == 1;
         assert LiCastUtil.cast(a, int.class) == 1;
 
+    }
+
+
+    @Test
+    public void testCast1() {
+
+        HashMap<Object, Object> map = new HashMap<>();
+        map.put("1", "1");
+        map.put(2, 2);
+
+        assert LiCastUtil.cast(map, String.class, String.class).size() == 1;
     }
 }

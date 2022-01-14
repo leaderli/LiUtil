@@ -1,7 +1,6 @@
 package com.leaderli.liutil.util;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class LiMapUtil {
 
@@ -66,7 +65,7 @@ public class LiMapUtil {
         Object value = map.get(key);
 
         if (value instanceof Map) {
-            return LiCastUtil.cast(map, keyType, valueType);
+            return LiCastUtil.cast((Map<?, ?>) value, keyType, valueType);
         }
 
         return new HashMap<>();

@@ -78,6 +78,7 @@ public class LiEventStoreTest {
 
         eventStore.push(new TestLiEvent("123"));
         thrown.expect(NullPointerException.class);
+        //noinspection ConstantConditions
         eventStore.push(null);
 
     }
@@ -86,7 +87,7 @@ public class LiEventStoreTest {
 
         LiEventStore liEventStore = new LiEventStore();
 
-        ILiEventListener listener = new ILiEventListener<TestLiEvent>() {
+        ILiEventListener<TestLiEvent> listener = new ILiEventListener<TestLiEvent>() {
 
 
             @Override
@@ -96,7 +97,8 @@ public class LiEventStoreTest {
 
             @Override
             public void listen(TestLiEvent event) {
-                System.out.println(event.getSource());
+                assert  event.getSource().equals("123");
+
             }
 
             @Override

@@ -55,6 +55,9 @@ public class LiMono<T> {
     public boolean isPresent() {
         return element != null;
     }
+    public boolean notPresent() {
+        return element == null;
+    }
 
     public Optional<T> get() {
         return Optional.ofNullable(element);
