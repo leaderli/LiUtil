@@ -19,7 +19,7 @@ public class LiSinkTest extends Assert {
 
                     if (this.nextSink.isPresent()) {
 
-                        return this.nextSink.getRaw().apply(request, last);
+                        return this.nextSink.get().apply(request, last);
                     }
                     return false;
                 }

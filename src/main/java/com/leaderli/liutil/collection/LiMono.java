@@ -6,9 +6,10 @@ import com.leaderli.liutil.util.LiClassUtil;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class LiMono<T> {
@@ -52,28 +53,29 @@ public class LiMono<T> {
         return this;
     }
 
+    public LiMono<T> error(Supplier<T> supplier) {
+        if (element == null) {
+            return LiMono.of(supplier.get());
+        }
+        return this;
+    }
+
     public boolean isPresent() {
         return element != null;
     }
+
     public boolean notPresent() {
         return element == null;
     }
 
-    public Optional<T> get() {
-        return Optional.ofNullable(element);
-    }
 
-    public T getRaw() {
+    public T get() {
         return element;
     }
 
 
     public T getOr(T def) {
-        if (isPresent()) {
-            return element;
-        } else {
-            return def;
-        }
+        return or(def).get();
     }
 
     public LiMono<T> or(T or) {
@@ -83,14 +85,22 @@ public class LiMono<T> {
         return LiMono.of(or);
     }
 
-    public <R> LiMono<R> cast(Class<R> type) {
+    public LiMono<T> filter(Predicate<T> predicate) {
 
-        if (isPresent() && LiClassUtil.isAssignableFromOrIsWrapper(type, this.element.getClass())) {
 
-            //noinspection unchecked
-            return (LiMono<R>) this;
+
+
+        if (Boolean.TRUE.equals(to(predicate::test).getOr(false))) {
+            return this;
         }
+
         return LiMono.empty();
+
+    }
+
+    public <R> LiMono<R> cast(Class<R> type) {
+        //noinspection unchecked
+        return (LiMono<R>) filter(monoElement -> LiClassUtil.isAssignableFromOrIsWrapper(type, monoElement.getClass()));
     }
 
     public <R> List<LiMono<R>> stream(Class<R> type) {

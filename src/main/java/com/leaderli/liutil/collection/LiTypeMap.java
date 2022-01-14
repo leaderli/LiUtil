@@ -4,6 +4,7 @@ import com.leaderli.liutil.util.LiClassUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * store value by it's type
@@ -21,6 +22,19 @@ public class LiTypeMap {
     }
 
     /**
+     * @param type     map key, it's a generic type
+     * @param supplier if map value don not exits, will use supplier
+     * @param <T>      key and value generic type
+     * @return map value or  supplier.get()
+     */
+    public <T> T computeIfAbsent(Class<T> type, Supplier<T> supplier) {
+        return getMono(type).error(() -> {
+            put(type, supplier.get());
+            return supplier.get();
+        }).get();
+    }
+
+    /**
      * @param type map key, it's a generic type
      * @param <T>  map value, it's a generic value
      * @return get value by type, it could be null
@@ -28,5 +42,9 @@ public class LiTypeMap {
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> type) {
         return (T) proxy.get(LiClassUtil.primitiveToWrapper(type));
+    }
+
+    public <T> LiMono<T> getMono(Class<T> type) {
+        return LiMono.of(get(type));
     }
 }

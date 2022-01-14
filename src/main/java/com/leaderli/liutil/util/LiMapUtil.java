@@ -1,5 +1,7 @@
 package com.leaderli.liutil.util;
 
+import com.leaderli.liutil.collection.LiMono;
+
 import java.util.*;
 
 public class LiMapUtil {
@@ -82,16 +84,11 @@ public class LiMapUtil {
     /**
      * 根据key，查询指定class类型的值，当查询不到或类型不匹配时，返回空
      */
-    public static <T> Optional<T> getTypeObject(Map<String, ?> map, String key, Class<T> itemType) {
-
-        if (map == null) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(LiCastUtil.cast(map.get(key), itemType));
-
+    public static <T> LiMono<T> getTypeObject(Map<String, ?> map, String key, Class<T> itemType) {
+        return LiMono.of(map).to(to->LiCastUtil.cast(map.get(key), itemType));
     }
 
-    public static Optional<String> getTypeObject(Map<String, String> map, String key) {
+    public static LiMono<String> getTypeObject(Map<String, String> map, String key) {
         return getTypeObject(map, key, String.class);
     }
 

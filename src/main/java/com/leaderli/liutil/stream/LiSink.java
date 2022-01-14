@@ -24,7 +24,7 @@ public abstract class LiSink<T, R> implements LiFunction<T, R> {
 
         LiSink<T, R> prev = this;
         while (prev.prevSink.isPresent()) {
-            prev = prev.prevSink.getRaw();
+            prev = prev.prevSink.get();
         }
         return prev.apply(request, null);
     }

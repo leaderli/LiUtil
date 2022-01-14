@@ -57,18 +57,18 @@ public class LiMonoTest extends Assert {
 
         LiMono<Body> mono = LiMono.of(data)
                 .to(Data::getBody);
-        assertTrue( mono.notPresent());
-        Optional<String> name = mono
+        assertTrue(mono.notPresent());
+        LiMono<String> name = mono
                 .to(Body::getRequest)
                 .to(Request::getName)
-                .or("123").get();
+                .or("123");
 
-        assertTrue( !name.isPresent() || "123".equals(name.get()));
+        assertTrue(!name.isPresent() || "123".equals(name.get()));
 
     }
 
     @Test
-    public void test4() {
+    public void cast1() {
 
         Object obj = new HashMap<>();
 
@@ -91,11 +91,11 @@ public class LiMonoTest extends Assert {
         list.add("2");
         list.add(1);
 
-        List<String> arr = LiMono.of(list).castList(String.class).getRaw();
+        List<String> arr = LiMono.of(list).castList(String.class).get();
         assertEquals(2, arr.size());
 
-        List<Integer> intArr = LiMono.of(list).castList(int.class).getRaw();
-        List<Integer> intArr2 = LiMono.of(list).castList(Integer.class).getRaw();
+        List<Integer> intArr = LiMono.of(list).castList(int.class).get();
+        List<Integer> intArr2 = LiMono.of(list).castList(Integer.class).get();
 
         assertEquals(1, intArr.size());
         assertEquals(1, intArr2.size());
@@ -107,7 +107,7 @@ public class LiMonoTest extends Assert {
         map.put(3, 3);
 
 
-        Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).getRaw();
+        Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).get();
 
         assertEquals(1, stringMap.size());
 
@@ -159,10 +159,29 @@ public class LiMonoTest extends Assert {
 
         LiMono<List<Map<String, String>>> mono = LiMono.of(list).castListMap(String.class, String.class);
 
-        assertTrue( mono.isPresent());
+        assertTrue(mono.isPresent());
 
-        assertEquals(1, mono.getRaw().size());
+        assertEquals(1, mono.get().size());
 
+    }
+
+    @Test
+    public void filter() {
+        LiMono<String> mono = LiMono.of(null);
+
+        Assert.assertNull(mono.filter(Objects::nonNull).get());
+        Assert.assertNull(mono.filter(str -> str.length() == 4).get());
+
+        mono = LiMono.of("123");
+        Assert.assertNotNull(mono.filter(Objects::nonNull).get());
+        Assert.assertNull(mono.filter(str -> str.length() == 4).get());
+    }
+
+    @Test
+    public void getOr() {
+
+        String or = LiMono.<String>of(null).getOr("123");
+        Assert.assertEquals("123", or);
     }
 
     private static class Data {
