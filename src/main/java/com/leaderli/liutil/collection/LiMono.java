@@ -55,7 +55,7 @@ public class LiMono<T> {
         return element != null;
     }
 
-    public Optional<T> getOr() {
+    public Optional<T> get() {
         return Optional.ofNullable(element);
     }
 
@@ -94,6 +94,14 @@ public class LiMono<T> {
                 .map(LiMono::of)
                 .collect(Collectors.toList());
 
+    }
+
+    public <K, V> List<LiMono<Map<K, V>>> mapStream(Class<K> keyType, Class<V> valueType) {
+
+        return stream(Map.class).stream()
+                .map(item -> item.castMap(keyType, valueType))
+                .filter(LiMono::isPresent)
+                .collect(Collectors.toList());
     }
 
 

@@ -100,7 +100,7 @@ public class LiMonoTest {
                 .to(Data::getBody).error(() -> System.out.println("error"))
                 .to(Body::getRequest)
                 .to(Request::getName)
-                .or("123").getOr();
+                .or("123").get();
 
         assert !name.isPresent() || "123".equals(name.get());
 
@@ -135,7 +135,7 @@ public class LiMonoTest {
         list.add("2");
         list.add(1);
 
-        List<String> arr = LiMono.of(list).castList(String.class).getOr().get();
+        List<String> arr = LiMono.of(list).castList(String.class).get().get();
 
         assert arr.size() == 2;
 
@@ -146,7 +146,7 @@ public class LiMonoTest {
         map.put(3, 3);
 
 
-        Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).getOr().get();
+        Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).get().get();
 
         assert stringMap.size() == 1;
 
@@ -163,5 +163,28 @@ public class LiMonoTest {
         List<LiMono<String>> stream = LiMono.of(list).stream(String.class);
 
         assert stream.size() == 2;
+
+
+        list = new ArrayList<>();
+
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("m1", "1");
+        map1.put("m2", 2);
+
+        list.add(map1);
+        list.add("1");
+        list.add("2");
+        list.add(1);
+        LiMono.of(list).stream(Map.class).forEach(item->{
+            System.out.println(item.get().get());
+            System.out.println(LiMono.of(item.get().get()).castMap(String.class, String.class).get());
+
+        });
+
+        List<LiMono<Map<String, String>>> mapStream = LiMono.of(list).mapStream(String.class, String.class);
+        mapStream.forEach(item->{
+            System.out.println(item.get().get());
+        });
+
     }
 }
