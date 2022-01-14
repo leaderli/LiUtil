@@ -10,6 +10,7 @@ public class LiEvent<T> extends EventObject {
         super(source);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public T getSource() {
         return (T) source;

@@ -1,5 +1,6 @@
 package com.leaderli.liutil.collection;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -7,7 +8,7 @@ import org.junit.rules.ExpectedException;
 import java.util.*;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class LiMonoTest {
+public class LiMonoTest extends Assert {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -33,9 +34,7 @@ public class LiMonoTest {
                 .to(Data::getBody)
                 .to(Body::getRequest)
                 .to(Request::getName)
-                .then(name -> {
-                    assert name.equals("hello");
-                });
+                .then(name -> assertEquals("hello", name));
 
         Body body = new Body();
         Request request = new Request();
@@ -47,9 +46,7 @@ public class LiMonoTest {
                 .to(Data::getBody)
                 .to(Body::getRequest)
                 .to(Request::getName)
-                .then(name -> {
-                    assert name.equals("hello");
-                })
+                .then(name -> assertEquals("hello", name))
                 .error(() -> System.out.println("there is something error when get name"));
 
     }
@@ -60,13 +57,13 @@ public class LiMonoTest {
 
         LiMono<Body> mono = LiMono.of(data)
                 .to(Data::getBody);
-        assert mono.notPresent();
+        assertTrue( mono.notPresent());
         Optional<String> name = mono
                 .to(Body::getRequest)
                 .to(Request::getName)
                 .or("123").get();
 
-        assert !name.isPresent() || "123".equals(name.get());
+        assertTrue( !name.isPresent() || "123".equals(name.get()));
 
     }
 
@@ -77,9 +74,7 @@ public class LiMonoTest {
 
         LiMono.of(obj)
                 .cast(Map.class)
-                .then(map -> {
-                    assert map.size() == 0;
-                })
+                .then(map -> assertEquals(0, map.size()))
                 .cast(List.class)
                 .then(list -> {
 
@@ -97,13 +92,13 @@ public class LiMonoTest {
         list.add(1);
 
         List<String> arr = LiMono.of(list).castList(String.class).getRaw();
-        assert arr.size() == 2;
+        assertEquals(2, arr.size());
 
         List<Integer> intArr = LiMono.of(list).castList(int.class).getRaw();
         List<Integer> intArr2 = LiMono.of(list).castList(Integer.class).getRaw();
 
-        assert intArr.size() == 1;
-        assert intArr2.size() == 1;
+        assertEquals(1, intArr.size());
+        assertEquals(1, intArr2.size());
 
         Map map = new HashMap<>();
 
@@ -114,7 +109,7 @@ public class LiMonoTest {
 
         Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).getRaw();
 
-        assert stringMap.size() == 1;
+        assertEquals(1, stringMap.size());
 
     }
 
@@ -128,7 +123,7 @@ public class LiMonoTest {
 
         List<LiMono<String>> stream = LiMono.of(list).stream(String.class);
 
-        assert stream.size() == 2;
+        assertEquals(2, stream.size());
 
 
         list = new ArrayList<>();
@@ -141,10 +136,10 @@ public class LiMonoTest {
         list.add("1");
         list.add("2");
         list.add(1);
-        assert LiMono.of(list).stream(Map.class).size() == 1;
+        assertEquals(1, LiMono.of(list).stream(Map.class).size());
 
         List<LiMono<Map<String, String>>> mapStream = LiMono.of(list).mapStream(String.class, String.class);
-        assert mapStream.size() == 1;
+        assertEquals(1, mapStream.size());
 
 
     }
@@ -164,9 +159,9 @@ public class LiMonoTest {
 
         LiMono<List<Map<String, String>>> mono = LiMono.of(list).castListMap(String.class, String.class);
 
-        assert mono.isPresent();
+        assertTrue( mono.isPresent());
 
-        assert mono.getRaw().size() == 1;
+        assertEquals(1, mono.getRaw().size());
 
     }
 

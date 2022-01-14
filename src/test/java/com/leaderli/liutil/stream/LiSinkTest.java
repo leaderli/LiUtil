@@ -1,9 +1,10 @@
 package com.leaderli.liutil.stream;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 
-public class LiSinkTest {
+public class LiSinkTest extends Assert {
 
     @Test
     public void test() {
@@ -16,9 +17,9 @@ public class LiSinkTest {
                 public Boolean apply(String request, Boolean last) {
 
 
-                    if(this.next!=null){
+                    if (this.nextSink.isPresent()) {
 
-                        return this.next.apply(request,last);
+                        return this.nextSink.getRaw().apply(request, last);
                     }
                     return false;
                 }
@@ -26,15 +27,11 @@ public class LiSinkTest {
         }
 
 
-        boolean hello = prev.request("hello");
-        assert !hello;
 
-
-
+        assertFalse( prev.request("hello"));
 
 
     }
-
 
 
 }

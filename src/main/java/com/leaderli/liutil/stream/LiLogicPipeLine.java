@@ -67,7 +67,7 @@ public class LiLogicPipeLine<T> implements LinterLogicPipeLineSink<T> {
             @Override
             public Boolean apply(T request, Boolean lastPredicateResult) {
                 //短路
-                if (lastPredicateResult) {
+                if (Boolean.TRUE.equals(lastPredicateResult)) {
                     return next(request, LiPredicateSink.NO_NOT_OPERATION);
                 }
                 return false;
@@ -82,7 +82,7 @@ public class LiLogicPipeLine<T> implements LinterLogicPipeLineSink<T> {
             @Override
             public Boolean apply(T request, Boolean lastPredicateResult) {
                 //短路
-                if (lastPredicateResult) {
+                if (Boolean.TRUE.equals(lastPredicateResult)) {
                     return true;
                 }
                 return next(request, LiPredicateSink.NO_NOT_OPERATION);

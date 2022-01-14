@@ -1,13 +1,12 @@
 package com.leaderli.liutil.util;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class LiListUtil {
 
     public static <T> List<T> getDuplicateElement(List<T> list) {
 
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return Collections.emptyList();
         }
 

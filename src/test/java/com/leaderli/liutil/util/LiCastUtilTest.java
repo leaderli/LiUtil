@@ -1,5 +1,6 @@
 package com.leaderli.liutil.util;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ public class LiCastUtilTest {
     public void cast() {
 
         Object a = "123";
-        assert "123".equals(LiCastUtil.cast(a, String.class));
-        assert LiCastUtil.cast(a, int.class) == null;
+        Assert.assertEquals("123", LiCastUtil.cast(a, String.class));
+        Assert.assertNull(LiCastUtil.cast(a, int.class));
 
         ArrayList<Object> list = new ArrayList<>();
         list.add(1);
@@ -26,22 +27,17 @@ public class LiCastUtilTest {
         assert LiCastUtil.cast(a, int.class) == null;
     }
 
-    @Test
-    public void test1() {
-
-
-    }
 
     @Test
     public void primitiveToWrapper() {
-        assert LiClassUtil.primitiveToWrapper(null) == null;
+        Assert.assertNull(LiClassUtil.primitiveToWrapper(null));
     }
 
     @Test
     public void testCast() {
         Object a = 1;
-        assert LiCastUtil.cast(a, Integer.class) == 1;
-        assert LiCastUtil.cast(a, int.class) == 1;
+        Assert.assertEquals(1, (int) LiCastUtil.cast(a, Integer.class));
+        Assert.assertEquals(1, (int) LiCastUtil.cast(a, int.class));
 
     }
 
@@ -52,7 +48,6 @@ public class LiCastUtilTest {
         HashMap<Object, Object> map = new HashMap<>();
         map.put("1", "1");
         map.put(2, 2);
-
-        assert LiCastUtil.cast(map, String.class, String.class).size() == 1;
+        Assert.assertEquals(1, LiCastUtil.cast(map, String.class, String.class).size());
     }
 }

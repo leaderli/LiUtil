@@ -1,6 +1,5 @@
 package com.leaderli.liutil.dom;
 
-import com.sun.org.apache.xerces.internal.impl.Constants;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.dom.DOMDocument;
@@ -11,6 +10,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
@@ -18,16 +18,16 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class LiDomUtil {
 
+
+    @SuppressWarnings("java:S106")
+    private static final PrintStream LOGGER = System.out;
+
     /**
      * 在读取文件时，去掉dtd的验证，可以缩短运行时间
      */
     public static SAXReader getSAXReader() {
+        @SuppressWarnings("all")
         SAXReader saxReader = new SAXReader(DOMDocumentFactory.getInstance(), false);
-        try {
-            saxReader.setFeature(Constants.XERCES_FEATURE_PREFIX + Constants.LOAD_EXTERNAL_DTD_FEATURE, false);  //设置不需要校验头文件
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return saxReader;
     }
 
@@ -71,7 +71,7 @@ public class LiDomUtil {
             XMLWriter xmlWriter = new XMLWriter(writer, OutputFormat.createPrettyPrint());
             xmlWriter.write(node);
             xmlWriter.close();
-            System.out.println(writer.toString());
+            LOGGER.println(writer);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,7 +89,7 @@ public class LiDomUtil {
             XMLWriter xmlWriter = new XMLWriter(writer, OutputFormat.createCompactFormat());
             xmlWriter.write(node);
             xmlWriter.close();
-            System.out.println(writer.toString());
+            LOGGER.println(writer);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -35,6 +35,7 @@ public class LiPrimitive {
     }
 
 
+    @SuppressWarnings("all")
     private static class Primitive {
         public static int INT;
 

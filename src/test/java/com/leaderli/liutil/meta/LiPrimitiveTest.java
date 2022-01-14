@@ -1,40 +1,40 @@
 package com.leaderli.liutil.meta;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static com.leaderli.liutil.meta.LiPrimitive.get;
 
-public class LiPrimitiveTest {
+public class LiPrimitiveTest extends Assert {
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     public void test() {
 
-        assert get(int.class) == 0;
-        assert get(Integer.class) == 0;
-        assert get(char.class) == 0;
-        assert get(Character.class) == 0;
-        assert get(byte.class) == 0;
-        assert get(Byte.class) == 0;
-        assert get(long.class) == 0;
-        assert get(Long.class) == 0;
+         Assert.assertEquals(0, (int) get(int.class));
+         Assert.assertEquals(0, (int) get(Integer.class));
+         Assert.assertEquals(0, (char) get(char.class));
+         Assert.assertEquals(0, (char) get(Character.class));
+         Assert.assertEquals(0, (byte) get(byte.class));
+         Assert.assertEquals(0, (byte) get(Byte.class));
+         Assert.assertEquals(0, (long) get(long.class));
+         Assert.assertEquals(0, (long) get(Long.class));
 
-        assert !get(boolean.class);
-        assert !get(Boolean.class);
+         Assert.assertFalse(get(boolean.class));
+         Assert.assertFalse(get(Boolean.class));
 
-        assert get(double.class) == 0;
-        assert get(Double.class) == 0;
+         Assert.assertEquals(0, get(double.class), 0.0);
+         Assert.assertEquals(0, get(Double.class), 0.0);
 
-        assert get(float.class) == 0;
-        assert get(Float.class) == 0;
+         Assert.assertEquals(0, get(float.class), 0.0);
+         Assert.assertEquals(0, get(Float.class), 0.0);
 
-        assert get(short.class) == 0;
-        assert get(Short.class) == 0;
+         Assert.assertEquals(0, (short) get(short.class));
+         Assert.assertEquals(0, (short) get(Short.class));
 
-        assert get(void.class) == null;
-        assert get(Void.class) == null;
+         Assert.assertNull(get(void.class));
+         Assert.assertNull(get(Void.class));
 
-        assert get(String.class) == null;
+         Assert.assertNull(get(String.class));
     }
 
 }

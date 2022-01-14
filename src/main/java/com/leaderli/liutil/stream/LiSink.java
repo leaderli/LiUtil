@@ -1,33 +1,30 @@
 package com.leaderli.liutil.stream;
 
+import com.leaderli.liutil.collection.LiMono;
+
 public abstract class LiSink<T, R> implements LiFunction<T, R> {
 
-    public final LiSink<T, R> prev;
-    public LiSink<T, R> next;
+    public final LiMono<LiSink<T, R>> prevSink;
+    protected LiMono<LiSink<T, R>> nextSink;
 
 
-    public LiSink(LiSink<T, R> prev) {
-        this.prev = prev;
-        if (prev != null) {
-            prev.next = this;
-        }
-
+    protected LiSink(LiSink<T, R> prev) {
+        this.prevSink = LiMono.of(prev);
+        this.prevSink.then(sink -> sink.nextSink = LiMono.of(this));
+        this.nextSink = LiMono.empty();
     }
 
 
-    public final R next(T request,R lastValue){
-        if(this.next!=null){
-            return this.next.apply(request, lastValue);
-        }
-        return lastValue;
+    public final R next(T request, R lastValue) {
+        return this.nextSink.to(sink -> sink.apply(request, lastValue)).getOr(lastValue);
     }
 
 
     public final R request(T request) {
 
         LiSink<T, R> prev = this;
-        while (prev.prev != null) {
-            prev = prev.prev;
+        while (prev.prevSink.isPresent()) {
+            prev = prev.prevSink.getRaw();
         }
         return prev.apply(request, null);
     }

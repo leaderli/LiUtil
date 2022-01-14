@@ -1,5 +1,6 @@
 package com.leaderli.liutil.event;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,6 +32,7 @@ public class LiEventStoreTest {
     }
 
 
+    @SuppressWarnings("all")
     private static class TestLiEventListener2 implements ILiEventListener<TestLiEvent> {
 
 
@@ -46,6 +48,7 @@ public class LiEventStoreTest {
         }
     }
 
+    @SuppressWarnings("all")
     private static class TestListenerLi implements ILiEventListener<String> {
 
         @Override
@@ -68,7 +71,6 @@ public class LiEventStoreTest {
     @Test
     public void getPublisher() {
 
-        TestLiEvent event = new TestLiEvent("hello");
 
 
         LiEventStore eventStore = new LiEventStore();
@@ -97,7 +99,9 @@ public class LiEventStoreTest {
 
             @Override
             public void listen(TestLiEvent event) {
-                assert  event.getSource().equals("123");
+
+                Assert.assertEquals("123",
+                        event.getSource());
 
             }
 

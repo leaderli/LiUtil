@@ -3,9 +3,10 @@ package com.leaderli.lidomutil.util;
 import com.leaderli.liutil.dom.LiDomUtil;
 import org.dom4j.DocumentException;
 import org.dom4j.dom.DOMElement;
+import org.junit.Assert;
 import org.junit.Test;
 
-public class LiDomUtilTest {
+public class LiDomUtilTest extends Assert {
 
 
     private static class Visitor {
@@ -37,6 +38,15 @@ public class LiDomUtilTest {
     @Test
     public void test() throws DocumentException {
         DOMElement dom = LiDomUtil.getDOMRootByPath("/test1.xml");
+
+        assertEquals(dom.asXML(),"<test>\n" +
+                "    <t1>1</t1>\n" +
+                "    <t2>1</t2>\n" +
+                "    <t3>\n" +
+                "        <tt3>tt3</tt3>\n" +
+                "    </t3>\n" +
+                "</test>");
+
 
         MyDom myDom = new MyDom(dom);
         myDom.accept(new Visitor(){
