@@ -85,6 +85,17 @@ public class LiMono<T> {
         return LiMono.empty();
     }
 
+    public <R> List<LiMono<R>> stream(Class<R> type) {
+
+        LiMono<List<R>> listLiMono = castList(type);
+
+        return listLiMono.get(Collections.emptyList())
+                .stream()
+                .map(LiMono::of)
+                .collect(Collectors.toList());
+
+    }
+
 
     public <R> LiMono<List<R>> castList(Class<R> type) {
 

@@ -151,4 +151,17 @@ public class LiMonoTest {
         assert stringMap.size() == 1;
 
     }
+
+    @Test
+    public void test6() {
+        List list = new ArrayList<>();
+
+        list.add("1");
+        list.add("2");
+        list.add(1);
+
+        List<LiMono<String>> stream = LiMono.of(list).stream(String.class);
+
+        assert stream.size() == 2;
+    }
 }
