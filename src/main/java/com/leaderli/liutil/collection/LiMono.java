@@ -1,6 +1,7 @@
 package com.leaderli.liutil.collection;
 
 import com.leaderli.liutil.util.LiCastUtil;
+import com.leaderli.liutil.util.LiClassUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +60,10 @@ public class LiMono<T> {
         return Optional.ofNullable(element);
     }
 
+    public T getRaw() {
+        return element;
+    }
+
 
     public T getOr(T def) {
         if (isPresent()) {
@@ -77,7 +82,7 @@ public class LiMono<T> {
 
     public <R> LiMono<R> cast(Class<R> type) {
 
-        if (isPresent() && type != null && type.isAssignableFrom(this.element.getClass())) {
+        if (isPresent() && LiClassUtil.isAssignableFromOrIsWrapper(type, this.element.getClass())) {
 
             //noinspection unchecked
             return (LiMono<R>) this;
@@ -99,7 +104,7 @@ public class LiMono<T> {
     public <K, V> List<LiMono<Map<K, V>>> mapStream(Class<K> keyType, Class<V> valueType) {
 
         return stream(Map.class).stream()
-                .map(item -> item.castMap(keyType, valueType))
+                .map(mapLiMono -> mapLiMono.castMap(keyType, valueType))
                 .filter(LiMono::isPresent)
                 .collect(Collectors.toList());
     }

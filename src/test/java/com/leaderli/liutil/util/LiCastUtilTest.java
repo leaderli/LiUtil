@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
+@SuppressWarnings("ConstantConditions")
 public class LiCastUtilTest {
 
     @Test
@@ -24,5 +23,24 @@ public class LiCastUtilTest {
         assert LiCastUtil.cast(a, Integer.class) == null;
         assert LiCastUtil.cast(list, Integer.class).size() == 2;
         assert LiCastUtil.cast(a, int.class) == null;
+    }
+    @Test
+    public void test1() {
+
+
+
+    }
+
+    @Test
+    public void primitiveToWrapper() {
+        assert LiClassUtil.primitiveToWrapper(null)==null;
+    }
+
+    @Test
+    public void testCast() {
+        Object a = 1;
+        assert LiCastUtil.cast(a, Integer.class) == 1;
+        assert LiCastUtil.cast(a, int.class) == 1;
+
     }
 }

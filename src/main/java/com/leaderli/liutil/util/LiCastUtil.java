@@ -14,7 +14,7 @@ public class LiCastUtil {
         }
         return origin.stream()
                 .filter(Objects::nonNull)
-                .filter(item -> castType.isAssignableFrom(item.getClass()))
+                .filter(item -> LiClassUtil.isAssignableFromOrIsWrapper(castType, item.getClass()))
                 .map(item -> (T) item)
                 .collect(Collectors.toList());
     }
@@ -25,18 +25,25 @@ public class LiCastUtil {
         if (map == null || keyType == null || valueType == null) {
             return new HashMap<>();
         }
-        return map.entrySet().stream().filter(entry ->
-                keyType.isAssignableFrom(entry.getKey().getClass())
-                        && valueType.isAssignableFrom(entry.getValue().getClass())
-        ).collect(Collectors.toMap(entry -> (K) entry.getKey(), entry -> (V) entry.getValue()));
+        return map.entrySet().stream()
+                .filter(entry -> LiClassUtil.isAssignableFromOrIsWrapper(keyType, entry.getKey().getClass())
+                        && LiClassUtil.isAssignableFromOrIsWrapper(valueType, entry.getValue().getClass())
+
+                )
+                .collect(Collectors.toMap(
+                        entry -> (K) entry.getKey(),
+                        entry -> (V) entry.getValue())
+                );
     }
 
 
+    @SuppressWarnings("unchecked")
     public static <T> T cast(Object origin, Class<T> castType) {
+        castType = (Class<T>) LiClassUtil.primitiveToWrapper(castType);
         if (origin == null || castType == null) {
             return null;
         }
-        if (castType.isAssignableFrom(origin.getClass())) {
+        if (LiClassUtil.isAssignableFromOrIsWrapper(castType, origin.getClass())) {
             //noinspection unchecked
             return (T) origin;
         }
