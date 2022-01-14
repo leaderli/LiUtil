@@ -1,5 +1,10 @@
 package com.leaderli.liutil.collection;
 
+import com.leaderli.liutil.util.LiCastUtil;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -45,21 +50,23 @@ public class LiMono<T> {
         return this;
     }
 
-    public Optional<T> get() {
-        return Optional.ofNullable(element);
-    }
-
     public boolean isPresent() {
         return element != null;
     }
 
+    public Optional<T> get() {
+        return Optional.ofNullable(element);
+    }
+
+
     public T get(T def) {
-        if(isPresent()){
+        if (isPresent()) {
             return element;
-        }else {
+        } else {
             return def;
         }
     }
+
     public LiMono<T> or(T or) {
         if (isPresent()) {
             return this;
@@ -67,9 +74,9 @@ public class LiMono<T> {
         return LiMono.of(or);
     }
 
-    public <R>LiMono<R> cast(Class<R> type){
+    public <R> LiMono<R> cast(Class<R> type) {
 
-        if(isPresent()&& type!=null &&type.isAssignableFrom(this.element.getClass())){
+        if (isPresent() && type != null && type.isAssignableFrom(this.element.getClass())) {
 
             //noinspection unchecked
             return (LiMono<R>) this;
@@ -77,4 +84,18 @@ public class LiMono<T> {
         return LiMono.empty();
     }
 
+
+    public <R> LiMono<List<R>> castList(Class<R> type) {
+
+        @SuppressWarnings("rawtypes")
+        LiMono<List> listMono = cast(List.class);
+        return LiMono.of(LiCastUtil.cast(listMono.get(null), type));
+    }
+
+    public <K, V> LiMono<Map<K, V>> castMap(Class<K> keyType, Class<V> valueType) {
+
+        @SuppressWarnings("rawtypes")
+        LiMono<Map> listMono = cast(Map.class);
+        return LiMono.of(LiCastUtil.cast(listMono.get(null), keyType, valueType));
+    }
 }

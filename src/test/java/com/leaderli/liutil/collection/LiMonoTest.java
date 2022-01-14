@@ -4,11 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+@SuppressWarnings({"rawtypes", "unchecked", "OptionalGetWithoutIsPresent"})
 public class LiMonoTest {
 
     private static class Data {
@@ -54,12 +52,14 @@ public class LiMonoTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void test1() throws Throwable {
+    public void test1() {
 
 
         Data data = new Data();
         thrown.expect(NullPointerException.class);
+        @SuppressWarnings("unused")
         String name = data.getBody().getRequest().getName();
+
     }
 
     @Test
@@ -107,7 +107,7 @@ public class LiMonoTest {
     }
 
     @Test
-    public void test4() throws Throwable {
+    public void test4() {
 
         Object obj = new HashMap<>();
 
@@ -123,6 +123,32 @@ public class LiMonoTest {
                     System.out.println(list.size());
                     System.out.println(list);
                 });
+
+    }
+
+    @Test
+    public void test5() {
+
+        List list = new ArrayList<>();
+
+        list.add("1");
+        list.add("2");
+        list.add(1);
+
+        List<String> arr = LiMono.of(list).castList(String.class).get().get();
+
+        assert arr.size() == 2;
+
+        Map map = new HashMap<>();
+
+        map.put("1", "1");
+        map.put("2", 2);
+        map.put(3, 3);
+
+
+        Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).get().get();
+
+        assert stringMap.size() == 1;
 
     }
 }
