@@ -2,7 +2,9 @@ package com.leaderli.liutil.util;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,4 +26,51 @@ public class LiMapUtilTest {
     }
 
 
+    @Test
+    public void override() {
+    }
+
+    @Test
+    public void getTypeList() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("k1","1");
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        map.put("k2", list);
+
+        assert LiMapUtil.getTypeList(map,"k1",String.class).isEmpty();
+        assert LiMapUtil.getTypeList(map,"k2",String.class).size() ==1;
+        assert LiMapUtil.getTypeList(map,"k2",Integer.class).isEmpty();
+        assert LiMapUtil.getTypeList(map,"k3",Integer.class).isEmpty();
+        assert LiMapUtil.getTypeList(null,"k3",Integer.class).isEmpty();
+    }
+
+
+    @Test
+    public void getTypeObject() {
+        Map<String,Object> map = new HashMap<>();
+        assert !LiMapUtil.getTypeObject(map,"k1",String.class).isPresent();
+        Map<String,String> map2= new HashMap<>();
+        assert !LiMapUtil.getTypeObject(map2,"k1").isPresent();
+
+        assert !LiMapUtil.getTypeObject(null,"k1").isPresent();
+    }
+
+    @Test
+    public void getTypeMap(){
+        Map<String,Object> map = new HashMap<>();
+
+        assert LiMapUtil.getTypeMap(map,"k1").isEmpty();
+
+        Map<String,Object> k1= new HashMap<>();
+        map.put("k1",k1);
+        k1.put("a",1);
+        assert LiMapUtil.getTypeMap(map,"k1").isEmpty();
+        Map<String,String> k2= new HashMap<>();
+        map.put("k2",k2);
+        k2.put("a","2");
+        System.out.println(map);
+        Map<String, String> typeMap = LiMapUtil.getTypeMap(map, "k2");
+        assert "2".equals(typeMap.get("a"));
+    }
 }
