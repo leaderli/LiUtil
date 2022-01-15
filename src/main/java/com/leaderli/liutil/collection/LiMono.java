@@ -3,22 +3,25 @@ package com.leaderli.liutil.collection;
 import com.leaderli.liutil.util.LiCastUtil;
 import com.leaderli.liutil.util.LiClassUtil;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
+/**
+ * A container object which contain a value
+ *
+ * @param <T> the type parameter of value
+ */
 public class LiMono<T> {
 
-    private final T element;
+    private final T value;
 
 
-    public LiMono(T element) {
-        this.element = element;
+    private LiMono(T value) {
+        this.value = value;
     }
 
 
@@ -32,65 +35,92 @@ public class LiMono<T> {
         return new LiMono<>(null);
     }
 
-    public <R> LiMono<R> to(Function<T, R> to) {
-        if (element != null) {
-            return LiMono.of(to.apply(this.element));
+    /**
+     * @param mapping a function to apply value
+     * @param <R>     the type parameter of mapped value
+     * @return the new LiMono with type <R>
+     */
+    public <R> LiMono<R> map(Function<T, R> mapping) {
+        if (value != null && mapping != null) {
+            return LiMono.of(mapping.apply(this.value));
         }
         return LiMono.empty();
     }
 
+    /**
+     * @param consumer apply  value when  value {@link #isPresent()}
+     * @return this
+     */
     public LiMono<T> then(Consumer<T> consumer) {
-        if (element != null) {
-            consumer.accept(element);
+        if (value != null) {
+            consumer.accept(value);
         }
         return this;
     }
 
+    /**
+     * @param runnable run when value {@link #notPresent()}
+     * @return this
+     */
     public LiMono<T> error(Runnable runnable) {
-        if (element == null) {
+        if (value == null) {
             runnable.run();
         }
         return this;
     }
 
+    /**
+     * @param supplier a {@link Supplier} whose result is returned if no value is present
+     * @return this if value present otherwise the new LiMono with result of {@link Supplier#get()}
+     */
     public LiMono<T> error(Supplier<T> supplier) {
-        if (element == null) {
+        if (value == null) {
             return LiMono.of(supplier.get());
         }
         return this;
     }
 
     public boolean isPresent() {
-        return element != null;
+        return value != null;
     }
 
     public boolean notPresent() {
-        return element == null;
+        return value == null;
     }
 
 
     public T get() {
-        return element;
+        return value;
     }
 
 
+    /**
+     * @param def the value is returned if no value is present
+     * @return value if present otherwise the def
+     */
     public T getOr(T def) {
         return or(def).get();
     }
 
-    public LiMono<T> or(T or) {
+    /**
+     * @param other the value is returned if no value is present
+     * @return this if value is present otherwise a new LiMono with value of other
+     */
+    public LiMono<T> or(T other) {
         if (isPresent()) {
             return this;
         }
-        return LiMono.of(or);
+        return LiMono.of(other);
     }
 
+    /**
+     * @param predicate the function predict value should remain
+     * @return this if value matches the predicate otherwise {@link #empty()}
+     */
     public LiMono<T> filter(Predicate<T> predicate) {
 
 
-
-
-        if (Boolean.TRUE.equals(to(predicate::test).getOr(false))) {
+        if (Boolean.TRUE.equals(map(predicate::test).getOr(false))) {
             return this;
         }
 
@@ -99,50 +129,39 @@ public class LiMono<T> {
     }
 
 
-    public <R> List<LiMono<R>> stream(Class<R> type) {
 
-        LiMono<List<R>> listLiMono = castList(type);
 
-        return listLiMono.getOr(Collections.emptyList())
-                .stream()
-                .map(LiMono::of)
-                .collect(Collectors.toList());
+    /**
+     * @param type the type of the list item value can be cast
+     * @param <R>  the type parameter of the list item
+     * @return return {@link LiFlux#empty()} if value type is not  {@link List}
+     * otherwise return new LiFlux with type value
+     */
+    public <R> LiFlux<R> flux(Class<R> type) {
 
+        @SuppressWarnings("rawtypes")
+        LiMono<List> listMono = cast(List.class);
+        return LiFlux.of(LiCastUtil.cast(listMono.getOr(null), type));
     }
 
-    public <K, V> List<LiMono<Map<K, V>>> mapStream(Class<K> keyType, Class<V> valueType) {
-
-        return stream(Map.class).stream()
-                .map(mapLiMono -> mapLiMono.castMap(keyType, valueType))
-                .filter(LiMono::isPresent)
-                .collect(Collectors.toList());
-    }
-
+    /**
+     * @param type the type of value can be cast
+     * @param <R>  the type parameter to the value
+     * @return new LiMono with value of casted type
+     */
     public <R> LiMono<R> cast(Class<R> type) {
         //noinspection unchecked
         return (LiMono<R>) filter(monoElement -> LiClassUtil.isAssignableFromOrIsWrapper(type, monoElement.getClass()));
     }
-
-    public <R> LiMono<List<R>> castList(Class<R> type) {
-
-        @SuppressWarnings("rawtypes")
-        LiMono<List> listMono = cast(List.class);
-        return LiMono.of(LiCastUtil.cast(listMono.getOr(null), type));
-    }
-
-    public <K, V> LiMono<List<Map<K, V>>> castListMap(Class<K> keyType, Class<V> valueType) {
-
-        @SuppressWarnings("rawtypes")
-        LiMono<List<Map>> listMapMono = castList(Map.class);
-
-        return listMapMono.to(list -> list.stream()
-                .map(item -> LiCastUtil.cast(item, keyType, valueType))
-                .filter(item -> !item.isEmpty())
-                .collect(Collectors.toList()));
-
-    }
-
-    public <K, V> LiMono<Map<K, V>> castMap(Class<K> keyType, Class<V> valueType) {
+    /**
+     * @param keyType   the type of map key
+     * @param valueType the type of map value
+     * @param <K>       the type parameter of map key
+     * @param <V>       the type parameter of map value
+     * @return return {@link #empty()} if value is not {@link Map}
+     * otherwise return new LiMono with Map<K,V>
+     */
+    public <K, V> LiMono<Map<K, V>> cast(Class<K> keyType, Class<V> valueType) {
 
         @SuppressWarnings("rawtypes")
         LiMono<Map> listMono = cast(Map.class);

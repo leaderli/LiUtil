@@ -31,7 +31,7 @@ public class LiPrimitive {
     @SuppressWarnings("unchecked")
     public static <T> T get(Class<T> type) {
         type = (Class<T>) LiClassUtil.primitiveToWrapper(type);
-        return ZERO_VALUE.get(type);
+        return ZERO_VALUE.get(type).get();
     }
 
 

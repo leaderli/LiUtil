@@ -31,9 +31,9 @@ public class LiMonoTest extends Assert {
         Data data = new Data();
 
         LiMono.of(data)
-                .to(Data::getBody)
-                .to(Body::getRequest)
-                .to(Request::getName)
+                .map(Data::getBody)
+                .map(Body::getRequest)
+                .map(Request::getName)
                 .then(name -> assertEquals("hello", name));
 
         Body body = new Body();
@@ -43,9 +43,9 @@ public class LiMonoTest extends Assert {
         data.setBody(body);
 
         LiMono.of(data)
-                .to(Data::getBody)
-                .to(Body::getRequest)
-                .to(Request::getName)
+                .map(Data::getBody)
+                .map(Body::getRequest)
+                .map(Request::getName)
                 .then(name -> assertEquals("hello", name))
                 .error(() -> System.out.println("there is something error when get name"));
 
@@ -56,11 +56,11 @@ public class LiMonoTest extends Assert {
         Data data = new Data();
 
         LiMono<Body> mono = LiMono.of(data)
-                .to(Data::getBody);
+                .map(Data::getBody);
         assertTrue(mono.notPresent());
         LiMono<String> name = mono
-                .to(Body::getRequest)
-                .to(Request::getName)
+                .map(Body::getRequest)
+                .map(Request::getName)
                 .or("123");
 
         assertTrue(!name.isPresent() || "123".equals(name.get()));
@@ -91,11 +91,11 @@ public class LiMonoTest extends Assert {
         list.add("2");
         list.add(1);
 
-        List<String> arr = LiMono.of(list).castList(String.class).get();
-        assertEquals(2, arr.size());
+        LiFlux<String> flux = LiMono.of(list).flux(String.class);
+        assertEquals(2, flux.size());
 
-        List<Integer> intArr = LiMono.of(list).castList(int.class).get();
-        List<Integer> intArr2 = LiMono.of(list).castList(Integer.class).get();
+        LiFlux<Integer> intArr = LiMono.of(list).flux(int.class);
+        LiFlux<Integer> intArr2 = LiMono.of(list).flux(Integer.class);
 
         assertEquals(1, intArr.size());
         assertEquals(1, intArr2.size());
@@ -107,7 +107,7 @@ public class LiMonoTest extends Assert {
         map.put(3, 3);
 
 
-        Map<String, String> stringMap = LiMono.of(map).castMap(String.class, String.class).get();
+        Map<String, String> stringMap = LiMono.of(map).cast(String.class, String.class).get();
 
         assertEquals(1, stringMap.size());
 
@@ -121,7 +121,7 @@ public class LiMonoTest extends Assert {
         list.add("2");
         list.add(1);
 
-        List<LiMono<String>> stream = LiMono.of(list).stream(String.class);
+        List<LiMono<String>> stream = LiMono.of(list).flux(String.class).get();
 
         assertEquals(2, stream.size());
 
@@ -136,34 +136,15 @@ public class LiMonoTest extends Assert {
         list.add("1");
         list.add("2");
         list.add(1);
-        assertEquals(1, LiMono.of(list).stream(Map.class).size());
+        assertEquals(1, LiMono.of(list).flux(Map.class).size());
 
-        List<LiMono<Map<String, String>>> mapStream = LiMono.of(list).mapStream(String.class, String.class);
+        LiFlux<Map<String, String>> mapStream = LiMono.of(list).flux(Map.class).cast(String.class, String.class);
         assertEquals(1, mapStream.size());
 
 
     }
 
-    @Test
-    public void test7() {
-        ArrayList<Object> list = new ArrayList<>();
 
-        Map<String, Object> map1 = new HashMap<>();
-        map1.put("m1", "1");
-        map1.put("m2", 2);
-
-        list.add(map1);
-        list.add("1");
-        list.add("2");
-        list.add(1);
-
-        LiMono<List<Map<String, String>>> mono = LiMono.of(list).castListMap(String.class, String.class);
-
-        assertTrue(mono.isPresent());
-
-        assertEquals(1, mono.get().size());
-
-    }
 
     @Test
     public void filter() {

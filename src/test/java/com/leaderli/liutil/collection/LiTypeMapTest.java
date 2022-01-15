@@ -11,13 +11,13 @@ public class LiTypeMapTest {
 
         LiTypeMap liTypeMap = new LiTypeMap();
 
-        String value = liTypeMap.get(String.class);
+        String value = liTypeMap.get(String.class).get();
 
 
         Assert.assertNull(value);
 
         liTypeMap.put(String.class, "");
-        value = liTypeMap.get(String.class);
+        value = liTypeMap.get(String.class).get();
         Assert.assertNotNull(value);
     }
 
@@ -25,7 +25,7 @@ public class LiTypeMapTest {
     public void computeIfAbsent() {
         LiTypeMap liTypeMap = new LiTypeMap();
 
-        String value = liTypeMap.computeIfAbsent(String.class, () -> "123");
+        String value = liTypeMap.computeIfAbsent(String.class, () -> "123").get();
         Assert.assertEquals("123",value);
     }
 
@@ -33,8 +33,8 @@ public class LiTypeMapTest {
     public void getMono() {
         LiTypeMap liTypeMap = new LiTypeMap();
 
-        Assert.assertTrue(liTypeMap.getMono(String.class).notPresent());
+        Assert.assertTrue(liTypeMap.get(String.class).notPresent());
         liTypeMap.put(String.class, "");
-        Assert.assertTrue(liTypeMap.getMono(String.class).isPresent());
+        Assert.assertTrue(liTypeMap.get(String.class).isPresent());
     }
 }

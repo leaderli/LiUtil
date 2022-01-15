@@ -15,36 +15,34 @@ public class LiTypeMap {
     /**
      * @param type  map key, it's a generic type
      * @param value map value, it's a generic value
-     * @param <T>   key and value generic type
+     * @param <T>   the type parameter of key and value
+     * @return map value
      */
-    public <T> void put(Class<T> type, T value) {
+    public <T> T put(Class<T> type, T value) {
         proxy.put(LiClassUtil.primitiveToWrapper(type), value);
+        return value;
     }
 
     /**
-     * @param type     map key, it's a generic type
-     * @param supplier if map value don not exits, will use supplier
-     * @param <T>      key and value generic type
-     * @return map value or  supplier.get()
+     * @param type     the map key
+     * @param supplier the value is returned if no value is stored by type
+     * @param <T>      the type parameter of key and value
+     * @return return new LiMono with stored value if value is present
+     * otherwise  store  {@link Supplier#get()} and return new LiMono th
      */
-    public <T> T computeIfAbsent(Class<T> type, Supplier<T> supplier) {
-        return getMono(type).error(() -> {
-            put(type, supplier.get());
-            return supplier.get();
-        }).get();
+    public <T> LiMono<T> computeIfAbsent(Class<T> type, Supplier<T> supplier) {
+        return get(type).error(() -> put(type, supplier.get()));
     }
 
+
     /**
-     * @param type map key, it's a generic type
-     * @param <T>  map value, it's a generic value
-     * @return get value by type, it could be null
+     * @param type the map key
+     * @param <T>  the type parameter of key and value
+     * @return return {@link LiMono#empty()} if map don not contains the value of type
+     * otherwise return new LiMono with  the value of type
      */
     @SuppressWarnings("unchecked")
-    public <T> T get(Class<T> type) {
-        return (T) proxy.get(LiClassUtil.primitiveToWrapper(type));
-    }
-
-    public <T> LiMono<T> getMono(Class<T> type) {
-        return LiMono.of(get(type));
+    public <T> LiMono<T> get(Class<T> type) {
+        return LiMono.of((T) proxy.get(LiClassUtil.primitiveToWrapper(type)));
     }
 }
