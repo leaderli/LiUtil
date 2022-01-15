@@ -21,7 +21,7 @@ public class LiDomUtilTest extends Assert {
 
     private static class MyDom {
 
-        private DOMElement dom;
+        private final DOMElement dom;
 
         public MyDom(DOMElement dom) {
             this.dom = dom;

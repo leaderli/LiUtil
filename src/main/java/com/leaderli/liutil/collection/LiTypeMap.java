@@ -10,6 +10,7 @@ import java.util.function.Supplier;
  * store value by it's type
  */
 public class LiTypeMap {
+
     private final Map<Class<?>, Object> proxy = new HashMap<>();
 
     /**
@@ -23,12 +24,12 @@ public class LiTypeMap {
         return value;
     }
 
+
     /**
-     * @param type     the map key
-     * @param supplier the value is returned if no value is stored by type
+     * @param type     map key, it's a generic type
+     * @param supplier if map value don not exits, will use supplier
      * @param <T>      the type parameter of key and value
-     * @return return new LiMono with stored value if value is present
-     * otherwise  store  {@link Supplier#get()} and return new LiMono th
+     * @return map value or  supplier.get()
      */
     public <T> LiMono<T> computeIfAbsent(Class<T> type, Supplier<T> supplier) {
         return get(type).error(() -> put(type, supplier.get()));

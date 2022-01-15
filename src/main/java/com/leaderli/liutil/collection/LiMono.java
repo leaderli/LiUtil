@@ -30,6 +30,8 @@ public class LiMono<T> {
         return new LiMono<>(t);
     }
 
+
+
     public static <T> LiMono<T> empty() {
 
         return new LiMono<>(null);
@@ -129,8 +131,6 @@ public class LiMono<T> {
     }
 
 
-
-
     /**
      * @param type the type of the list item value can be cast
      * @param <R>  the type parameter of the list item
@@ -153,6 +153,7 @@ public class LiMono<T> {
         //noinspection unchecked
         return (LiMono<R>) filter(monoElement -> LiClassUtil.isAssignableFromOrIsWrapper(type, monoElement.getClass()));
     }
+
     /**
      * @param keyType   the type of map key
      * @param valueType the type of map value
