@@ -121,7 +121,7 @@ public class LiMonoTest extends Assert {
         list.add("2");
         list.add(1);
 
-        List<LiMono<String>> stream = LiMono.of(list).flux(String.class).get();
+        List<LiMono<String>> stream = LiMono.of(list).flux(String.class).getMonoCopy();
 
         assertEquals(2, stream.size());
 
@@ -161,7 +161,7 @@ public class LiMonoTest extends Assert {
     @Test
     public void getOr() {
 
-        String or = LiMono.<String>of(null).getOr("123");
+        String or = LiMono.<String>of(null).getOrOther("123");
         Assert.assertEquals("123", or);
     }
 

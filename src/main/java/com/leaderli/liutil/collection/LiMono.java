@@ -100,7 +100,7 @@ public class LiMono<T> {
      * @param def the value is returned if no value is present
      * @return value if present otherwise the def
      */
-    public T getOr(T def) {
+    public T getOrOther(T def) {
         return or(def).get();
     }
 
@@ -122,7 +122,7 @@ public class LiMono<T> {
     public LiMono<T> filter(Predicate<T> predicate) {
 
 
-        if (Boolean.TRUE.equals(map(predicate::test).getOr(false))) {
+        if (Boolean.TRUE.equals(map(predicate::test).getOrOther(false))) {
             return this;
         }
 
@@ -141,7 +141,7 @@ public class LiMono<T> {
 
         @SuppressWarnings("rawtypes")
         LiMono<List> listMono = cast(List.class);
-        return LiFlux.of(LiCastUtil.cast(listMono.getOr(null), type));
+        return LiFlux.of(LiCastUtil.cast(listMono.getOrOther(null), type));
     }
 
     /**
@@ -166,6 +166,6 @@ public class LiMono<T> {
 
         @SuppressWarnings("rawtypes")
         LiMono<Map> listMono = cast(Map.class);
-        return LiMono.of(LiCastUtil.cast(listMono.getOr(null), keyType, valueType));
+        return LiMono.of(LiCastUtil.cast(listMono.getOrOther(null), keyType, valueType));
     }
 }

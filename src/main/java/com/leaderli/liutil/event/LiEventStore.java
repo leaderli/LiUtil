@@ -1,6 +1,5 @@
 package com.leaderli.liutil.event;
 
-import java.util.EventObject;
 import java.util.List;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -15,17 +14,26 @@ public class LiEventStore {
     }
 
     public void unRegisterListener(ILiEventListener listener) {
-        List list = liEventMap.get(listener.genericType());
-        if (list != null) {
-            list.remove(listener);
-        }
+        liEventMap.remove(listener);
     }
 
-    public <T extends EventObject> void push(T liEvent) {
+    /**
+     * push event with message, trigger {@link ILiEventListener#listen(Object)},
+     * if  {@link ILiEventListener#unRegisterListenerAfterListen()} predicate,
+     * the listener will be removed
+     *
+     * @param liEvent the push message
+     * @param <T>     the type parameter of LiEvent
+     */
+    public <T extends LiEvent> void push(T liEvent) {
         Class<T> cls = (Class<T>) liEvent.getClass();
         List<ILiEventListener<T>> listeners = liEventMap.get(cls);
-        listeners.forEach(listener -> listener.listen(liEvent));
-        listeners.removeIf(ILiEventListener::unRegisterListenerAfterListen);
+        listeners.forEach(listener -> {
+            listener.listen(liEvent);
+            if (listener.unRegisterListenerAfterListen()) {
+                liEventMap.remove(listener);
+            }
+        });
     }
 
 }

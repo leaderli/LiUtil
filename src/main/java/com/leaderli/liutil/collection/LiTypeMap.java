@@ -46,4 +46,11 @@ public class LiTypeMap {
     public <T> LiMono<T> get(Class<T> type) {
         return LiMono.of((T) proxy.get(LiClassUtil.primitiveToWrapper(type)));
     }
+
+
+    public <T> void remove(Class<T> type) {
+        this.proxy.remove(type);
+    }
+
+
 }

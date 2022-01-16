@@ -16,7 +16,7 @@ public abstract class LiSink<T, R> implements LiFunction<T, R> {
 
 
     public final R next(T request, R lastValue) {
-        return this.nextSink.map(sink -> sink.apply(request, lastValue)).getOr(lastValue);
+        return this.nextSink.map(sink -> sink.apply(request, lastValue)).getOrOther(lastValue);
     }
 
 

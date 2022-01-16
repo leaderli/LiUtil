@@ -9,6 +9,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * A container object which contain a collection value
+ *
+ * @param <T> the type parameter of  collection data
+ */
 public class LiFlux<T> {
 
 
@@ -28,6 +33,11 @@ public class LiFlux<T> {
         return new LiFlux<>(monos);
     }
 
+    /**
+     * @param elements the origin collection data
+     * @param <T>      the type parameter of collection data
+     * @return new LiFlux with a copy of the origin collection data
+     */
     public static <T> LiFlux<T> of(List<T> elements) {
 
         if (elements == null) {
@@ -72,21 +82,34 @@ public class LiFlux<T> {
      * @return get a copy of the collection data, because the collection should not
      * changed by outside
      */
-    public List<LiMono<T>> get() {
+    public List<LiMono<T>> getMonoCopy() {
         return new ArrayList<>(monos);
     }
 
+    /**
+     * @return get a copy of the collection raw data , filter not present mono data
+     */
+    public List<T> getRawCopy() {
+        return trim().monos.stream()
+                .map(LiMono::get)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @param others a collection of data when not present
+     * @return return {@link #getMonoCopy()} if present otherwise return {@link #getMonoCopy()}  of  the new LiFlux with others data
+     */
     @SafeVarargs
-    public final List<LiMono<T>> getOr(T... ors) {
-        return or(ors).get();
+    public final List<LiMono<T>> getMonoCopyOrOther(T... others) {
+        return or(others).getMonoCopy();
     }
 
     @SafeVarargs
-    public final LiFlux<T> or(T... ors) {
+    public final LiFlux<T> or(T... others) {
         if (notEmpty()) {
             return this;
         }
-        return LiFlux.of(ors);
+        return LiFlux.of(others);
     }
 
 
@@ -108,6 +131,16 @@ public class LiFlux<T> {
                 .filter(mono -> predicate == null || predicate.test(mono.get()))
                 .collect(Collectors.toList());
         return new LiFlux<>(filtered);
+    }
+
+
+    /**
+     * @param t the element that will be removed from monos
+     * @return this
+     */
+    public LiFlux<T> remove(T t) {
+        this.monos.removeIf(mono -> mono.get() == t);
+        return this;
     }
 
     /**

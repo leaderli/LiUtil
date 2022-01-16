@@ -27,7 +27,7 @@ public class LiFluxTest {
         LiFlux<Integer> flux = LiFlux.of(1, 2, 3);
         assertEquals(3, flux.size());
 
-        List<LiMono<Integer>> liMonos = flux.get();
+        List<LiMono<Integer>> liMonos = flux.getMonoCopy();
         liMonos.add(LiMono.of(4));
 
         assertEquals(4, liMonos.size());
@@ -37,10 +37,16 @@ public class LiFluxTest {
 
     @Test
     public void getOr() {
-        List<LiMono<Integer>> flux = LiFlux.<Integer>empty().getOr(1, 2, 3);
+        List<LiMono<Integer>> flux = LiFlux.<Integer>empty().getMonoCopyOrOther(1, 2, 3);
         assertEquals(3, flux.size());
-        flux = LiFlux.of(1).getOr(1, 2, 3);
+        flux = LiFlux.of(1).getMonoCopyOrOther(1, 2, 3);
         assertEquals(1, flux.size());
+
+        LiFlux<Object> empty = LiFlux.empty();
+        assertEquals(0, empty.size());
+        assertEquals(1, empty.or(1).size());
+        assertEquals(1, empty.getMonoCopyOrOther(1).size());
+        assertEquals(0, empty.size());
     }
 
     @Test
@@ -109,8 +115,27 @@ public class LiFluxTest {
         flux = flux.filter(null);
         assertEquals(2, flux.size());
 
-        flux = flux.filter(it->it>1);
+        flux = flux.filter(it -> it > 1);
         assertEquals(1, flux.size());
 
+    }
+
+    @Test
+    public void remove() {
+        LiFlux<Integer> flux = LiFlux.of(1, null, 2);
+        assertEquals(3, flux.size());
+
+        flux.remove(1);
+        assertEquals(2, flux.size());
+
+        flux.remove(null);
+        assertEquals(1, flux.size());
+    }
+
+    @Test
+    public void getRawList() {
+        LiFlux<Integer> flux = LiFlux.of(1, null, 2);
+
+        assertEquals(2, flux.getRawCopy().size());
     }
 }

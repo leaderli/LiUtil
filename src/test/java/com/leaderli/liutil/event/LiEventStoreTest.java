@@ -72,7 +72,6 @@ public class LiEventStoreTest {
     public void getPublisher() {
 
 
-
         LiEventStore eventStore = new LiEventStore();
 
         eventStore.registerListener(new TestLiEventListener());
@@ -84,37 +83,65 @@ public class LiEventStoreTest {
         eventStore.push(null);
 
     }
+
+    public static class TempListener implements ILiEventListener<TestLiEvent> {
+
+        int count;
+
+        boolean remove;
+
+        TempListener(boolean remove) {
+            this.remove = remove;
+        }
+
+        @Override
+        public Class<TestLiEvent> genericType() {
+            return TestLiEvent.class;
+        }
+
+        @Override
+        public void listen(TestLiEvent event) {
+
+            Assert.assertEquals("123",
+                    event.getSource());
+            count++;
+
+        }
+
+        @Override
+        public boolean unRegisterListenerAfterListen() {
+            return remove;
+        }
+    }
+
+
     @Test
     public void test1() {
 
         LiEventStore liEventStore = new LiEventStore();
 
-        ILiEventListener<TestLiEvent> listener = new ILiEventListener<TestLiEvent>() {
-
-
-            @Override
-            public Class<TestLiEvent> genericType() {
-                return TestLiEvent.class;
-            }
-
-            @Override
-            public void listen(TestLiEvent event) {
-
-                Assert.assertEquals("123",
-                        event.getSource());
-
-            }
-
-            @Override
-            public boolean unRegisterListenerAfterListen() {
-                return true;
-            }
-        };
+        TempListener listener = new TempListener(true);
+        Assert.assertEquals(0, listener.count);
         liEventStore.registerListener(listener);
-
         liEventStore.push(new TestLiEvent("123"));
+        Assert.assertEquals(1, listener.count);
         liEventStore.push(new TestLiEvent("123"));
+        Assert.assertEquals(1, listener.count);
 
+    }
+
+    @Test
+    public void test2() {
+        LiEventStore liEventStore = new LiEventStore();
+
+
+        TempListener listener = new TempListener(false);
+        Assert.assertEquals(0, listener.count);
+        liEventStore.registerListener(listener);
+        liEventStore.push(new TestLiEvent("123"));
+        Assert.assertEquals(1, listener.count);
+        liEventStore.push(new TestLiEvent("123"));
+        Assert.assertEquals(2, listener.count);
     }
 
 
