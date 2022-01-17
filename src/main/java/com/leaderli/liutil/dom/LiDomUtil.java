@@ -9,10 +9,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -43,6 +40,16 @@ public class LiDomUtil {
 
     public static DOMDocument getDOMDocumentByString(String xml) throws DocumentException {
         return (DOMDocument) getSAXReader().read(new StringReader(xml));
+
+    }
+
+    public static DOMDocument getDOMDocumentByInputStream(InputStream inputStream) throws DocumentException {
+        return (DOMDocument) getSAXReader().read(inputStream);
+
+    }
+
+    public static DOMElement getDOMRootByInputStream(InputStream inputStream) throws DocumentException {
+        return (DOMElement) getSAXReader().read(inputStream).getRootElement();
 
     }
 
