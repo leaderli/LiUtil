@@ -96,6 +96,28 @@ public class LiFlux<T> {
     }
 
     /**
+     * @return return the first element of collection data if collection is present
+     * otherwise return {@link LiMono#empty()}
+     */
+    public LiMono<T> getFirst() {
+
+        List<T> rawCopy = getRawCopy();
+        if (rawCopy.isEmpty()) {
+            return LiMono.empty();
+        }
+        return LiMono.of(rawCopy.get(0));
+    }
+    /**
+     * @return return the first element which is predicate true of collection data
+     * otherwise return {@link LiMono#empty()}
+     */
+    public LiMono<T> getFirst(Predicate<T> predicate) {
+        LiFlux<T> filter = filter(predicate);
+        return filter.getFirst();
+    }
+
+
+    /**
      * @param others a collection of data when not present
      * @return return {@link #getMonoCopy()} if present otherwise return {@link #getMonoCopy()}  of  the new LiFlux with others data
      */
