@@ -82,6 +82,17 @@ public class LiMono<T> {
         return this;
     }
 
+    /**
+     * @throws  RuntimeException - when value is null
+     * @return this
+     */
+    public LiMono<T> exception(){
+        if(value==null){
+            throw  new RuntimeException("value is null ");
+        }
+        return this;
+    }
+
     public boolean isPresent() {
         return value != null;
     }
