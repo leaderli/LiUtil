@@ -43,7 +43,7 @@ class LiEventMap {
      * @param listener the listener of {@link ILiEventListener}
      * @param <T>      the type parameter of {@link ILiEventListener} and  {@link LiEvent}
      */
-    public <T extends LiEvent<?>> void remove(ILiEventListener<T> listener) {
+    public <T> void remove(ILiEventListener<T> listener) {
 
         Class<T> cls = listener.genericType();
 

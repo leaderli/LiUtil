@@ -1,5 +1,6 @@
 package com.leaderli.liutil.event;
 
+import java.util.EventObject;
 import java.util.List;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -25,7 +26,7 @@ public class LiEventStore {
      * @param liEvent the push message
      * @param <T>     the type parameter of LiEvent
      */
-    public <T extends LiEvent> void push(T liEvent) {
+    public <T extends EventObject> void push(T liEvent) {
         Class<T> cls = (Class<T>) liEvent.getClass();
         List<ILiEventListener<T>> listeners = liEventMap.get(cls);
         listeners.forEach(listener -> {

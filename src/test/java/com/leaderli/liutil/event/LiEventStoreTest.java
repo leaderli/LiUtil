@@ -20,8 +20,8 @@ public class LiEventStoreTest {
 
 
         @Override
-        public void listen(TestLiEvent event) {
-            assert event.getSource().equals("123");
+        public void listen(TestLiEvent source) {
+            assert source.getSource().equals("123");
 
         }
 
@@ -37,8 +37,8 @@ public class LiEventStoreTest {
 
 
         @Override
-        public void listen(TestLiEvent event) {
-            assert event.getSource().equals("123");
+        public void listen(TestLiEvent source) {
+            assert source.getSource().equals("123");
 
         }
 
@@ -52,9 +52,9 @@ public class LiEventStoreTest {
     private static class TestListenerLi implements ILiEventListener<String> {
 
         @Override
-        public void listen(String event) {
+        public void listen(String source) {
 
-            assert event.equals("123");
+            assert source.equals("123");
         }
 
         @Override
@@ -100,10 +100,10 @@ public class LiEventStoreTest {
         }
 
         @Override
-        public void listen(TestLiEvent event) {
+        public void listen(TestLiEvent source) {
 
             Assert.assertEquals("123",
-                    event.getSource());
+                    source.getSource());
             count++;
 
         }

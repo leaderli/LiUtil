@@ -15,7 +15,7 @@ public class LiEventMapTest {
     private static class Temp implements ILiEventListener<TempEvent> {
 
         @Override
-        public void listen(TempEvent event) {
+        public void listen(TempEvent source) {
 
         }
 
