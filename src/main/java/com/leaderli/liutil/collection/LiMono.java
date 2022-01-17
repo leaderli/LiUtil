@@ -1,5 +1,6 @@
 package com.leaderli.liutil.collection;
 
+import com.leaderli.liutil.exception.LiMonoRuntimeException;
 import com.leaderli.liutil.util.LiCastUtil;
 import com.leaderli.liutil.util.LiClassUtil;
 
@@ -29,7 +30,6 @@ public class LiMono<T> {
 
         return new LiMono<>(t);
     }
-
 
 
     public static <T> LiMono<T> empty() {
@@ -83,12 +83,12 @@ public class LiMono<T> {
     }
 
     /**
-     * @throws  RuntimeException - when value is null
      * @return this
+     * @throws RuntimeException - when value is null
      */
-    public LiMono<T> exception(){
-        if(value==null){
-            throw  new RuntimeException("value is null ");
+    public LiMono<T> exception() {
+        if (value == null) {
+            throw new LiMonoRuntimeException("value is null ");
         }
         return this;
     }
@@ -124,6 +124,17 @@ public class LiMono<T> {
             return this;
         }
         return LiMono.of(other);
+    }
+
+    /**
+     * @param other the value is returned if no value is present
+     * @return this if value is present otherwise return other
+     */
+    public LiMono<T> or(LiMono<T> other) {
+        if (isPresent()) {
+            return this;
+        }
+        return other;
     }
 
     /**
