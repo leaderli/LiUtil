@@ -138,4 +138,14 @@ public class LiFluxTest {
 
         assertEquals(2, flux.getRawCopy().size());
     }
+
+    @Test
+    public void getFirst() {
+        LiFlux<Integer> flux = LiFlux.of(1, null, 2);
+
+        Assert.assertEquals((Integer) 1, flux.getFirst().get());
+
+        Assert.assertEquals((Integer) 2, flux.getFirst(it->it>1).get());
+
+    }
 }
