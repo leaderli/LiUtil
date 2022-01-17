@@ -68,6 +68,9 @@ public class LiDomUtil {
         return element.selectNodes(xpath);
     }
 
+    public static DOMElement selectSingleNode(Node element, String xpath) {
+        return (DOMElement) element.selectSingleNode(xpath);
+    }
     /**
      * 打印格式化文本
      */
