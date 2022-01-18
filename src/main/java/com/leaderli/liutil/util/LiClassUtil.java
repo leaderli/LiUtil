@@ -1,7 +1,9 @@
 package com.leaderli.liutil.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class LiClassUtil {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_MAP = new HashMap<>();
@@ -36,5 +38,28 @@ public class LiClassUtil {
             return primitiveToWrapper(son) == primitiveToWrapper(father);
         }
         return false;
+    }
+
+    /**
+     * @return the list of absolute jar path under webapp
+     */
+    public static List<String> getAppJars() {
+
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try {
+            Enumeration<URL> resources = loader.getResources("META-INF");
+            return Collections.list(resources).stream()
+                    .filter(url -> "jar".equals(url.getProtocol()))
+                    .map(URL::getFile)
+                    .map(path -> path.replace("!/META-INF", "")
+                            .replaceAll("^[^/]++/", ""))
+
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
+
     }
 }
