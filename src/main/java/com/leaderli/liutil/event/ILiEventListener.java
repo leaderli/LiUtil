@@ -2,10 +2,7 @@ package com.leaderli.liutil.event;
 
 import com.leaderli.liutil.type.GenericType;
 
-import java.util.EventObject;
-
 /**
- *
  * @param <T> the type parameter of  event source
  */
 public interface ILiEventListener<T> extends GenericType<T> {

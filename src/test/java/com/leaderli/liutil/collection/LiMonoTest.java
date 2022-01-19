@@ -145,7 +145,6 @@ public class LiMonoTest extends Assert {
     }
 
 
-
     @Test
     public void filter() {
         LiMono<String> mono = LiMono.of(null);
@@ -156,6 +155,30 @@ public class LiMonoTest extends Assert {
         mono = LiMono.of("123");
         Assert.assertNotNull(mono.filter(Objects::nonNull).get());
         Assert.assertNull(mono.filter(str -> str.length() == 4).get());
+
+//
+        mono = LiMono.of("123");
+        Assert.assertNotNull(mono.filter(LiMono::of).get());
+
+        Assert.assertNull(mono.cast(int.class).cast(String.class).get());
+        Assert.assertNull(mono.filter(it -> LiMono.of(it).cast(int.class).cast(String.class)).get());
+
+        Assert.assertNull(mono.filter(it -> null).get());
+        Assert.assertNotNull(mono.filter(it -> 1).get());
+
+        Assert.assertNull(mono.filter(it -> LiFlux.empty()).get());
+        Assert.assertNotNull(mono.filter(it -> LiFlux.of(1)).get());
+//        LiMono<String> filter = LiMono.of(null);
+//        LiMono<Boolean> cast = filter.cast(Boolean.class);
+//        System.out.println(cast);
+//        LiMono<Boolean> or = cast
+//                .or(filter.cast(LiMono.class).isPresent());
+//        System.out.println(or);
+//        LiMono<Boolean> or1 = or
+//                .or(filter.cast_map(LiFlux.class, LiFlux::notEmpty));
+//        System.out.println(or1);
+//        System.out.println(or1.getOrOther(false));
+
     }
 
     @Test

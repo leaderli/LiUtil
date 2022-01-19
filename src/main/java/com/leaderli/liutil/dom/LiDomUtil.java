@@ -71,6 +71,7 @@ public class LiDomUtil {
     public static DOMElement selectSingleNode(Node element, String xpath) {
         return (DOMElement) element.selectSingleNode(xpath);
     }
+
     /**
      * 打印格式化文本
      */
@@ -87,6 +88,19 @@ public class LiDomUtil {
             e.printStackTrace();
         }
 
+    }
+
+    public static String pretty(Node node) {
+        StringWriter writer = new StringWriter();
+        XMLWriter xmlWriter = new XMLWriter(writer, OutputFormat.createPrettyPrint());
+        try {
+            xmlWriter.write(node);
+            xmlWriter.close();
+            return writer.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**

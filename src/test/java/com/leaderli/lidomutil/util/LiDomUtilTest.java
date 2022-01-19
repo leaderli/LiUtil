@@ -61,4 +61,25 @@ public class LiDomUtilTest extends Assert {
 
     }
 
+    @Test
+    public void selectSingleNode() throws DocumentException {
+        DOMElement dom = LiDomUtil.getDOMRootByPath("/test1.xml");
+
+        Assert.assertEquals("<t1>1</t1>",
+                LiDomUtil.selectSingleNode(dom, "t1").asXML());
+
+    }
+
+    @Test
+    public void pretty() throws DocumentException {
+        DOMElement dom = LiDomUtil.getDOMRootByPath("/test1.xml");
+        Assert.assertEquals("\n" +
+                "<test> \n" +
+                "  <t1>1</t1>  \n" +
+                "  <t2>1</t2>  \n" +
+                "  <t3> \n" +
+                "    <tt3>tt3</tt3> \n" +
+                "  </t3> \n" +
+                "</test>",LiDomUtil.pretty(dom));
+    }
 }

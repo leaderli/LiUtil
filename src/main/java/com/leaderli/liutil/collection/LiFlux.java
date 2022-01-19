@@ -3,10 +3,11 @@ package com.leaderli.liutil.collection;
 import com.leaderli.liutil.util.LiCastUtil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -38,14 +39,27 @@ public class LiFlux<T> {
      * @param <T>      the type parameter of collection data
      * @return new LiFlux with a copy of the origin collection data
      */
-    public static <T> LiFlux<T> of(List<T> elements) {
+    public static <T> LiFlux<T> of(Iterator<T> elements) {
+        if (elements == null) {
+            return LiFlux.empty();
+        }
+        List<LiMono<T>> monos = new ArrayList<>();
+        elements.forEachRemaining(element -> monos.add(LiMono.of(element)));
+        return new LiFlux<>(monos);
+    }
+
+    /**
+     * @param elements the origin collection data
+     * @param <T>      the type parameter of collection data
+     * @return new LiFlux with a copy of the origin collection data
+     */
+    public static <T> LiFlux<T> of(Iterable<T> elements) {
 
         if (elements == null) {
             return LiFlux.empty();
         }
-        List<LiMono<T>> monos = elements.stream()
-                .map(LiMono::of)
-                .collect(Collectors.toList());
+        List<LiMono<T>> monos = new ArrayList<>();
+        elements.forEach(element -> monos.add(LiMono.of(element)));
         return new LiFlux<>(monos);
     }
 
@@ -107,12 +121,14 @@ public class LiFlux<T> {
         }
         return LiMono.of(rawCopy.get(0));
     }
+
     /**
+     * @param function {@link LiMono#filter(Function)}
      * @return return the first element which is predicate true of collection data
      * otherwise return {@link LiMono#empty()}
      */
-    public LiMono<T> getFirst(Predicate<T> predicate) {
-        LiFlux<T> filter = filter(predicate);
+    public LiMono<T> getFirst(Function<T, Object> function) {
+        LiFlux<T> filter = filter(function);
         return filter.getFirst();
     }
 
@@ -143,14 +159,14 @@ public class LiFlux<T> {
     }
 
     /**
-     * @param predicate judge collection item should remain
-     * @return return new LiFlux which filter monos by predicate function
+     * @param function {@link LiMono#filter(Function)}
+     * @return return new LiFlux which filter monos by function function
      */
-    public LiFlux<T> filter(Predicate<T> predicate) {
+    public LiFlux<T> filter(Function<T, Object> function) {
 
         List<LiMono<T>> filtered = this.monos.stream()
+                .map(mono -> mono.filter(function))
                 .filter(LiMono::isPresent)
-                .filter(mono -> predicate == null || predicate.test(mono.get()))
                 .collect(Collectors.toList());
         return new LiFlux<>(filtered);
     }
@@ -177,6 +193,7 @@ public class LiFlux<T> {
         return new LiFlux<>(castMonos);
     }
 
+
     /**
      * the monos item is map
      *
@@ -189,6 +206,27 @@ public class LiFlux<T> {
     public <K, V> LiFlux<Map<K, V>> cast(Class<K> keyType, Class<V> valueType) {
         return cast(Map.class)
                 .map(map -> LiCastUtil.cast(map, keyType, valueType));
+    }
+
+    /**
+     * @see #cast(Class, Class)
+     * @see #map(Function)
+     */
+    public <K, V, R> LiFlux<R> cast_map(Class<K> keyType, Class<V> valueType, Function<Map<K, V>, R> mapping) {
+        return cast(keyType, valueType).map(mapping);
+    }
+
+    /**
+     * @see #cast(Class)
+     * @see #map(Function)
+     */
+    public <R, E> LiFlux<E> cast_map(Class<R> type, Function<R, E> mapping) {
+        return cast(type).map(mapping);
+    }
+
+
+    public void forEach(Consumer<T> consumer) {
+        getRawCopy().forEach(consumer);
     }
 
 

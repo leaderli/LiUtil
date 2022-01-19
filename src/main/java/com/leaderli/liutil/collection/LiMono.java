@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -138,18 +137,40 @@ public class LiMono<T> {
     }
 
     /**
-     * @param predicate the function predict value should remain
-     * @return this if value matches the predicate otherwise {@link #empty()}
+     * @param function the function return a object value that object type decide the mono value should remain
+     * @return  if function is null, return this;
+     * return this when function return LiMono and  {@link LiMono#isPresent()} is true
+     * return this when function return LiFLux and  {@link LiFlux#notEmpty()} ()} is true
+     * return this when function return other object and   object is not null
+     * otherwise return {@link #empty()}
      */
-    public LiMono<T> filter(Predicate<T> predicate) {
+    public LiMono<T> filter(Function<T, Object> function) {
 
-
-        if (Boolean.TRUE.equals(map(predicate::test).getOrOther(false))) {
+        if (function == null) {
             return this;
         }
+        if (notPresent()) {
+            return LiMono.empty();
+        }
+        Object apply = function.apply(this.value);
+        if (apply instanceof Boolean) {
+            return filter((Boolean) apply);
+        } else if (apply instanceof LiMono) {
+            return filter(((LiMono<?>) apply).isPresent());
+        } else if (apply instanceof LiFlux) {
+            return filter(((LiFlux<?>) apply).notEmpty());
+        } else {
+            return filter(apply != null);
+        }
 
-        return LiMono.empty();
+    }
 
+    /**
+     * @param filter if the value should remain
+     * @return return this if filter is true otherwise  {@link #empty()}
+     */
+    public LiMono<T> filter(boolean filter) {
+        return filter ? this : LiMono.empty();
     }
 
 
@@ -172,8 +193,11 @@ public class LiMono<T> {
      * @return new LiMono with value of casted type
      */
     public <R> LiMono<R> cast(Class<R> type) {
-        //noinspection unchecked
-        return (LiMono<R>) filter(monoElement -> LiClassUtil.isAssignableFromOrIsWrapper(type, monoElement.getClass()));
+        if (this.isPresent() && LiClassUtil.isAssignableFromOrIsWrapper(type, this.value.getClass())) {
+            //noinspection unchecked
+            return (LiMono<R>) this;
+        }
+        return LiMono.empty();
     }
 
     /**
@@ -189,5 +213,27 @@ public class LiMono<T> {
         @SuppressWarnings("rawtypes")
         LiMono<Map> listMono = cast(Map.class);
         return LiMono.of(LiCastUtil.cast(listMono.getOrOther(null), keyType, valueType));
+    }
+
+
+    /**
+     * @see #cast(Class, Class)
+     * @see #map(Function)
+     */
+    public <K, V, R> LiMono<R> cast_map(Class<K> keyType, Class<V> valueType, Function<Map<K, V>, R> mapping) {
+        return cast(keyType, valueType).map(mapping);
+    }
+
+    /**
+     * @see #cast(Class)
+     * @see #map(Function)
+     */
+    public <R, E> LiMono<E> cast_map(Class<R> type, Function<R, E> mapping) {
+        return cast(type).map(mapping);
+    }
+
+    @Override
+    public String toString() {
+        return "mono:" + value;
     }
 }

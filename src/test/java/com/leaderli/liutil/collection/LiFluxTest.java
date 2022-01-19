@@ -1,5 +1,6 @@
 package com.leaderli.liutil.collection;
 
+import com.leaderli.liutil.meta.LiMeta;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,6 +20,11 @@ public class LiFluxTest {
 
         Assert.assertTrue(LiFlux.of(new ArrayList<>()).isEmpty());
         assertEquals(2, LiFlux.of(Arrays.asList(1, 2)).size());
+
+        Iterator<Integer> iterator = Arrays.asList(1, 2, 3).iterator();
+
+        assertEquals(3, LiFlux.of(iterator).size());
+
     }
 
     @Test
@@ -69,6 +75,9 @@ public class LiFluxTest {
 
         assertEquals(3, cast.size());
 
+
+        assertEquals("1", of.cast_map(Integer.class, String::valueOf).getFirst().get());
+
     }
 
     @Test
@@ -88,6 +97,8 @@ public class LiFluxTest {
 
         assertEquals(1, mono.size());
 
+        LiFlux<Integer> integerLiFlux = LiMono.of(list).flux(Map.class).cast_map(String.class, Object.class, Map::size);
+        assertEquals(2, integerLiFlux.getFirst().get().intValue());
 
     }
 
@@ -137,6 +148,10 @@ public class LiFluxTest {
         LiFlux<Integer> flux = LiFlux.of(1, null, 2);
 
         assertEquals(2, flux.getRawCopy().size());
+
+        LiMeta<Integer> count = new LiMeta<>(0);
+        flux.forEach(in -> count.set(count.get() + 1));
+        assertEquals(2, count.get().intValue());
     }
 
     @Test
@@ -145,7 +160,7 @@ public class LiFluxTest {
 
         Assert.assertEquals((Integer) 1, flux.getFirst().get());
 
-        Assert.assertEquals((Integer) 2, flux.getFirst(it->it>1).get());
+        Assert.assertEquals((Integer) 2, flux.getFirst(it -> it > 1).get());
 
     }
 }
