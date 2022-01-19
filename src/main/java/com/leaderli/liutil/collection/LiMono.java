@@ -142,6 +142,8 @@ public class LiMono<T> {
      * @return if function is null, return this;
      * return this when function return LiMono and  {@link LiMono#isPresent()} is true
      * return this when function return LiFLux and  {@link LiFlux#notEmpty()} ()} is true
+     * return this when function return Collection and object is not empty
+     * return this when function return Map and object is not empty
      * return this when function return other object and   object is not null
      * otherwise return {@link #empty()}
      */
