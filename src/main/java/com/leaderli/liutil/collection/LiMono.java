@@ -4,6 +4,7 @@ import com.leaderli.liutil.exception.LiMonoRuntimeException;
 import com.leaderli.liutil.util.LiCastUtil;
 import com.leaderli.liutil.util.LiClassUtil;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -138,7 +139,7 @@ public class LiMono<T> {
 
     /**
      * @param function the function return a object value that object type decide the mono value should remain
-     * @return  if function is null, return this;
+     * @return if function is null, return this;
      * return this when function return LiMono and  {@link LiMono#isPresent()} is true
      * return this when function return LiFLux and  {@link LiFlux#notEmpty()} ()} is true
      * return this when function return other object and   object is not null
@@ -159,6 +160,10 @@ public class LiMono<T> {
             return filter(((LiMono<?>) apply).isPresent());
         } else if (apply instanceof LiFlux) {
             return filter(((LiFlux<?>) apply).notEmpty());
+        } else if (apply instanceof Collection) {
+            return filter(!((Collection<?>) apply).isEmpty());
+        } else if (apply instanceof Map) {
+            return filter(!((Map<?, ?>) apply).isEmpty());
         } else {
             return filter(apply != null);
         }

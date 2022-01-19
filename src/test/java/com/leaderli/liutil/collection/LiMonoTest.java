@@ -168,6 +168,14 @@ public class LiMonoTest extends Assert {
 
         Assert.assertNull(mono.filter(it -> LiFlux.empty()).get());
         Assert.assertNotNull(mono.filter(it -> LiFlux.of(1)).get());
+
+        Assert.assertNull(mono.filter(it -> new ArrayList<>()).get());
+        Assert.assertNotNull(mono.filter(it -> Arrays.asList(1, 2)).get());
+
+        HashMap<Object, Object> test = new HashMap<>();
+        Assert.assertNull(mono.filter(it -> test).get());
+        test.put("key","value");
+        Assert.assertNotNull(mono.filter(it -> test).get());
 //        LiMono<String> filter = LiMono.of(null);
 //        LiMono<Boolean> cast = filter.cast(Boolean.class);
 //        System.out.println(cast);
