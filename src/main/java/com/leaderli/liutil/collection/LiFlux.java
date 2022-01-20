@@ -2,10 +2,7 @@ package com.leaderli.liutil.collection;
 
 import com.leaderli.liutil.util.LiCastUtil;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,6 +24,9 @@ public class LiFlux<T> {
 
     @SafeVarargs
     public static <T> LiFlux<T> of(T... elements) {
+        if (elements == null) {
+            return LiFlux.empty();
+        }
         List<LiMono<T>> monos = new ArrayList<>();
         for (T element : elements) {
             monos.add(LiMono.of(element));
@@ -63,8 +63,50 @@ public class LiFlux<T> {
         return new LiFlux<>(monos);
     }
 
+    /**
+     *
+     * @param elements  appended elements of monos
+     * @return this
+     */
+    @SafeVarargs
+    public final LiFlux<T> add(T... elements) {
+        if (elements != null) {
+            for (T element : elements) {
+                this.monos.add(LiMono.of(element));
+            }
+        }
+        return this;
+    }
+    /**
+     *
+     * @param elements  appended elements of monos
+     * @return this
+     */
+    public final LiFlux<T> add(Iterable<T> elements) {
+        if (elements != null) {
+            elements.forEach(element -> monos.add(LiMono.of(element)));
+        }
+        return this;
+    }
+    /**
+     *
+     * @param elements  appended elements of monos
+     * @return this
+     */
+    public final LiFlux<T> add(Iterator<T> elements) {
+        if (elements != null) {
+            elements.forEachRemaining(element -> monos.add(LiMono.of(element)));
+        }
+        return this;
+    }
+
+    /**
+     *
+     * @param <T>      the type parameter of collection data
+     * @return the empty LiFlux
+     */
     public static <T> LiFlux<T> empty() {
-        return of();
+        return new LiFlux<>(new ArrayList<>());
     }
 
     /**
@@ -72,9 +114,10 @@ public class LiFlux<T> {
      * @param <R>     the type parameter of converted type
      * @return return new  LiFlux of type R
      */
-    public <R> LiFlux<R> map(Function<T, R> mapping) {
+    public <R> LiFlux<R> map(Function<? super T, ? extends R> mapping) {
         if (mapping != null) {
-            List<LiMono<R>> new_monos = this.monos.stream().map(mono -> mono.map(mapping)).collect(Collectors.toList());
+            //noinspection unchecked
+            List<LiMono<R>> new_monos = this.monos.stream().map(mono -> (LiMono<R>) mono.map(mapping)).collect(Collectors.toList());
             return new LiFlux<>(new_monos);
         }
         return LiFlux.empty();
@@ -127,7 +170,7 @@ public class LiFlux<T> {
      * @return return the first element which is predicate true of collection data
      * otherwise return {@link LiMono#empty()}
      */
-    public LiMono<T> getFirst(Function<T, Object> function) {
+    public LiMono<T> getFirst(Function<? super T, Object> function) {
         LiFlux<T> filter = filter(function);
         return filter.getFirst();
     }
@@ -162,7 +205,7 @@ public class LiFlux<T> {
      * @param function {@link LiMono#filter(Function)}
      * @return return new LiFlux which filter monos by function function
      */
-    public LiFlux<T> filter(Function<T, Object> function) {
+    public LiFlux<T> filter(Function<? super T, Object> function) {
 
         List<LiMono<T>> filtered = this.monos.stream()
                 .map(mono -> mono.filter(function))

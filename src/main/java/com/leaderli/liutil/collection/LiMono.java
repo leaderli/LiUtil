@@ -5,6 +5,7 @@ import com.leaderli.liutil.util.LiCastUtil;
 import com.leaderli.liutil.util.LiClassUtil;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -42,7 +43,7 @@ public class LiMono<T> {
      * @param <R>     the type parameter of mapped value
      * @return the new LiMono with type <R>
      */
-    public <R> LiMono<R> map(Function<T, R> mapping) {
+    public <R> LiMono<R> map(Function<? super T, ? extends R> mapping) {
         if (value != null && mapping != null) {
             return LiMono.of(mapping.apply(this.value));
         }
@@ -147,7 +148,7 @@ public class LiMono<T> {
      * return this when function return other object and   object is not null
      * otherwise return {@link #empty()}
      */
-    public LiMono<T> filter(Function<T, Object> function) {
+    public LiMono<T> filter(Function<? super T, Object> function) {
 
         if (function == null) {
             return this;
@@ -162,7 +163,7 @@ public class LiMono<T> {
             return filter(((LiMono<?>) apply).isPresent());
         } else if (apply instanceof LiFlux) {
             return filter(((LiFlux<?>) apply).notEmpty());
-        } else if (apply instanceof Collection) {
+        } else if (apply instanceof Iterable) {
             return filter(!((Collection<?>) apply).isEmpty());
         } else if (apply instanceof Map) {
             return filter(!((Map<?, ?>) apply).isEmpty());
@@ -192,6 +193,43 @@ public class LiMono<T> {
         @SuppressWarnings("rawtypes")
         LiMono<List> listMono = cast(List.class);
         return LiFlux.of(LiCastUtil.cast(listMono.getOrOther(null), type));
+    }
+
+    /**
+     * @param mapping the function convert mono to flux
+     * @param <R>     the type parameter of flux
+     * @return the flux
+     */
+    public <R> LiFlux<R> fluxByArray(Function<T, R[]> mapping) {
+        if (mapping == null) {
+            return LiFlux.empty();
+        }
+        return map(mapping).map(LiFlux::of).getOrOther(LiFlux.empty());
+    }
+
+    /**
+     * @param mapping the function convert mono to flux
+     * @param <R>     the type parameter of flux
+     * @return the flux
+     */
+    public <R> LiFlux<R> fluxByIterator(Function<T, Iterator<R>> mapping) {
+        if (mapping == null) {
+            return LiFlux.empty();
+        }
+        return map(mapping).map(LiFlux::of).getOrOther(LiFlux.empty());
+    }
+
+
+    /**
+     * @param mapping the function convert mono to flux
+     * @param <R>     the type parameter of flux
+     * @return the flux
+     */
+    public <R> LiFlux<R> flux(Function<T, Iterable<R>> mapping) {
+        if (mapping == null) {
+            return LiFlux.empty();
+        }
+        return map(mapping).map(LiFlux::of).getOrOther(LiFlux.empty());
     }
 
     /**
@@ -227,7 +265,7 @@ public class LiMono<T> {
      * @see #cast(Class, Class)
      * @see #map(Function)
      */
-    public <K, V, R> LiMono<R> cast_map(Class<K> keyType, Class<V> valueType, Function<Map<K, V>, R> mapping) {
+    public <K, V, R> LiMono<R> cast_map(Class<K> keyType, Class<V> valueType, Function<Map<K, V>, ? extends R> mapping) {
         return cast(keyType, valueType).map(mapping);
     }
 
@@ -235,8 +273,12 @@ public class LiMono<T> {
      * @see #cast(Class)
      * @see #map(Function)
      */
-    public <R, E> LiMono<E> cast_map(Class<R> type, Function<R, E> mapping) {
+    public <R, E> LiMono<E> cast_map(Class<R> type, Function<? super R, ? extends E> mapping) {
         return cast(type).map(mapping);
+    }
+
+    public <E> LiCase<T, E> toCase() {
+        return LiCase.of(this);
     }
 
     @Override

@@ -163,4 +163,15 @@ public class LiFluxTest {
         Assert.assertEquals((Integer) 2, flux.getFirst(it -> it > 1).get());
 
     }
+
+    @SuppressWarnings("all")
+    @Test
+    public void append() {
+        LiFlux<Integer> append = LiFlux.<Integer>empty().add(1);
+        assertEquals(1, append.size());
+        Iterator a = null;
+        append.add(a);
+        assertEquals(1, append.size());
+
+    }
 }
