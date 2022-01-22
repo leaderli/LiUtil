@@ -27,6 +27,9 @@ public class LiEventStore {
      * @param <T>     the type parameter of LiEvent
      */
     public <T extends EventObject> void push(T liEvent) {
+        if (liEvent == null) {
+            return;
+        }
         Class<T> cls = (Class<T>) liEvent.getClass();
         List<ILiEventListener<T>> listeners = liEventMap.get(cls);
         listeners.forEach(listener -> {
