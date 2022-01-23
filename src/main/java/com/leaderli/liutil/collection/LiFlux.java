@@ -2,7 +2,10 @@ package com.leaderli.liutil.collection;
 
 import com.leaderli.liutil.util.LiCastUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -64,8 +67,7 @@ public class LiFlux<T> {
     }
 
     /**
-     *
-     * @param elements  appended elements of monos
+     * @param elements appended elements of monos
      * @return this
      */
     @SafeVarargs
@@ -77,9 +79,9 @@ public class LiFlux<T> {
         }
         return this;
     }
+
     /**
-     *
-     * @param elements  appended elements of monos
+     * @param elements appended elements of monos
      * @return this
      */
     public final LiFlux<T> add(Iterable<T> elements) {
@@ -88,9 +90,9 @@ public class LiFlux<T> {
         }
         return this;
     }
+
     /**
-     *
-     * @param elements  appended elements of monos
+     * @param elements appended elements of monos
      * @return this
      */
     public final LiFlux<T> add(Iterator<T> elements) {
@@ -101,8 +103,7 @@ public class LiFlux<T> {
     }
 
     /**
-     *
-     * @param <T>      the type parameter of collection data
+     * @param <T> the type parameter of collection data
      * @return the empty LiFlux
      */
     public static <T> LiFlux<T> empty() {
@@ -232,6 +233,7 @@ public class LiFlux<T> {
     public <R> LiFlux<R> cast(Class<R> type) {
         List<LiMono<R>> castMonos = this.monos.stream()
                 .map(mono -> mono.cast(type))
+                .filter(LiMono::isPresent)
                 .collect(Collectors.toList());
         return new LiFlux<>(castMonos);
     }
