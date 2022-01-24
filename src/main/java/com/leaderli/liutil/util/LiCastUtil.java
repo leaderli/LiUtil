@@ -3,6 +3,7 @@ package com.leaderli.liutil.util;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class LiCastUtil {
 
 

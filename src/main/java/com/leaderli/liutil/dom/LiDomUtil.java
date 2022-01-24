@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
+@Deprecated
 public class LiDomUtil {
 
 

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+@Deprecated
 public class LiIO {
 
     public static final Charset DEFAULT_CHARACTER_ENCODING = StandardCharsets.UTF_8;

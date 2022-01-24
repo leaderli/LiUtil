@@ -3,6 +3,7 @@ package com.leaderli.liutil.event;
 
 import java.util.EventObject;
 
+@Deprecated
 public class LiEvent<T> extends EventObject {
 
 

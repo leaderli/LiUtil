@@ -5,6 +5,7 @@ import com.leaderli.liutil.type.GenericType;
 /**
  * @param <T> the type parameter of  event source
  */
+@Deprecated
 public interface ILiEventListener<T> extends GenericType<T> {
 
     void listen(T source);

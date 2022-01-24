@@ -11,6 +11,7 @@ import java.util.function.Function;
  * @param <T> the type parameter of mono
  * @param <E> the type parameter of mapping mono
  */
+@Deprecated
 public class LiCase<T, E> {
 
     private final LiMono<T> mono;

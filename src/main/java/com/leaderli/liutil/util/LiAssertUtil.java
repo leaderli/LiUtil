@@ -2,6 +2,7 @@ package com.leaderli.liutil.util;
 
 import com.leaderli.liutil.exception.LiAssertException;
 
+@Deprecated
 public class LiAssertUtil {
 
     public static void assertTrue(boolean assertTrue) {

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
  *
  * @param <T> the type parameter of  collection data
  */
+@Deprecated
 public class LiFlux<T> {
 
 

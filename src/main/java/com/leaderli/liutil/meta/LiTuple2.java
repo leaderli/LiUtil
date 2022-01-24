@@ -1,6 +1,7 @@
 package com.leaderli.liutil.meta;
 
 @SuppressWarnings("all")
+@Deprecated
 public class LiTuple2<T1, T2> {
 
     public final T1 _1;

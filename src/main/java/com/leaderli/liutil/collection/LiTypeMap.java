@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 /**
  * store value by it's type
  */
+@Deprecated
 public class LiTypeMap {
 
     private final Map<Class<?>, Object> proxy = new HashMap<>();

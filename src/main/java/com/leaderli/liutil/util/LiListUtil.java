@@ -2,6 +2,7 @@ package com.leaderli.liutil.util;
 
 import java.util.*;
 
+@Deprecated
 public class LiListUtil {
 
     public static <T> List<T> getDuplicateElement(List<T> list) {

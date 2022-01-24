@@ -2,6 +2,7 @@ package com.leaderli.liutil.collection;
 
 import java.util.Arrays;
 
+@Deprecated
 public class LiLimitArray<T> {
 
     public final int size;

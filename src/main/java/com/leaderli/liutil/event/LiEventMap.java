@@ -6,6 +6,7 @@ import java.util.*;
  * a container that store  a collection of {@link ILiEventListener} by type which extends {@link LiEvent}
  * and  {@link ILiEventListener}  , {@link LiEvent} has same type parameters
  */
+@Deprecated
 class LiEventMap {
 
     private final Map<Class<?>, List<ILiEventListener<?>>> eventListenerMap = new HashMap<>();

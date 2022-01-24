@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class LiClassUtil {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_MAP = new HashMap<>();
 

@@ -2,6 +2,7 @@ package com.leaderli.liutil.stream;
 
 import java.util.function.Predicate;
 
+@Deprecated
 public class LiLogicPipeLine<T> implements LinterLogicPipeLineSink<T> {
 
 

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.leaderli</groupId>
   <artifactId>LiUtil</artifactId>
-  <version>1.7</version>
+  <version>2.0</version>
   <name>LiUtil</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

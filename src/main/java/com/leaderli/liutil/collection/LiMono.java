@@ -17,6 +17,7 @@ import java.util.function.Supplier;
  *
  * @param <T> the type parameter of value
  */
+@Deprecated
 public class LiMono<T> {
 
     private final T value;

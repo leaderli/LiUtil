@@ -3,7 +3,9 @@ package com.leaderli.liutil.meta;
 import com.leaderli.liutil.collection.LiTypeMap;
 import com.leaderli.liutil.util.LiClassUtil;
 
+@Deprecated
 public class LiPrimitive {
+
 
 
     public static final int INT = Primitive.INT;

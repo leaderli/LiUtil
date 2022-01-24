@@ -5,6 +5,7 @@ package com.leaderli.liutil.meta;
  *
  * @param <T>
  */
+@Deprecated
 public class LiMeta<T> {
 
     private T value;

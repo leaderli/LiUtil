@@ -4,6 +4,7 @@ import com.leaderli.liutil.collection.LiMono;
 
 import java.util.*;
 
+@Deprecated
 public class LiMapUtil {
 
     public static <K, V> Map<K, V> override(Map<K, V> origin, Map<K, V> override) {

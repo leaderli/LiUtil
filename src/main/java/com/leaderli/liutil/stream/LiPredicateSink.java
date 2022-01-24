@@ -2,6 +2,7 @@ package com.leaderli.liutil.stream;
 
 import java.util.function.Predicate;
 
+@Deprecated
 public class LiPredicateSink<T> extends LiSink<T, Boolean> {
 
     public static final boolean NO_NOT_OPERATION = false;

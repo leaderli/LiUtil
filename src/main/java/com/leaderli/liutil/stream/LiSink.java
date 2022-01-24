@@ -2,6 +2,7 @@ package com.leaderli.liutil.stream;
 
 import com.leaderli.liutil.collection.LiMono;
 
+@Deprecated
 public abstract class LiSink<T, R> implements LiFunction<T, R> {
 
     public final LiMono<LiSink<T, R>> prevSink;

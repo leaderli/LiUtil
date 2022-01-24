@@ -4,6 +4,7 @@ import java.util.EventObject;
 import java.util.List;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
+@Deprecated
 public class LiEventStore {
 
     private final LiEventMap liEventMap = new LiEventMap();
