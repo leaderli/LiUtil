@@ -78,8 +78,6 @@ public class LiEventStoreTest {
         eventStore.registerListener(new TestLiEventListener2());
 
         eventStore.push(new TestLiEvent("123"));
-        thrown.expect(NullPointerException.class);
-        //noinspection ConstantConditions
         eventStore.push(null);
 
     }
