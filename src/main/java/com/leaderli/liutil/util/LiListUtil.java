@@ -7,7 +7,7 @@ public class LiListUtil {
     public static <T> List<T> getDuplicateElement(List<T> list) {
 
         if (list == null || list.isEmpty()) {
-            return Collections.emptyList();
+            return LiListUtil.emptyList();
         }
 
         List<T> duplicate = new ArrayList<>();
@@ -22,5 +22,9 @@ public class LiListUtil {
 
         return duplicate;
 
+    }
+
+    public static <T>List<T> emptyList(){
+        return new ArrayList<>();
     }
 }

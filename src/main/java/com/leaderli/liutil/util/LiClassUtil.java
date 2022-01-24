@@ -59,7 +59,7 @@ public class LiClassUtil {
             e.printStackTrace();
         }
 
-        return Collections.emptyList();
+        return LiListUtil.emptyList();
 
     }
 }

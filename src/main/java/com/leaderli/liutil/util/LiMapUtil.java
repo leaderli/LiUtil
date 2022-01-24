@@ -11,7 +11,7 @@ public class LiMapUtil {
         return _override(origin, override);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("all")
     private static <T> T _override(T origin, T override) {
 
         if (origin == null) {
@@ -40,7 +40,7 @@ public class LiMapUtil {
     public static <T> List<T> getTypeList(Map<String, ?> map, String key, Class<T> listItemType) {
 
         if (map == null) {
-            return Collections.emptyList();
+            return LiListUtil.emptyList();
         }
         Object value = map.get(key);
 
@@ -49,7 +49,7 @@ public class LiMapUtil {
             //noinspection
             return LiCastUtil.cast((List<?>) value, listItemType);
         }
-        return Collections.emptyList();
+        return LiListUtil.emptyList();
     }
 
     public static List<String> getTypeList(Map<String, ?> map, String key) {

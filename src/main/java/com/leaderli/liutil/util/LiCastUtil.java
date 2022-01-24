@@ -10,7 +10,7 @@ public class LiCastUtil {
     public static <T> List<T> cast(List<?> origin, Class<T> castType) {
 
         if (origin == null || castType == null) {
-            return Collections.emptyList();
+            return LiListUtil.emptyList();
         }
         return origin.stream()
                 .filter(Objects::nonNull)
